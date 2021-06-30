@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Bai.Domain\Bai.Domain.Settings\Bai.Domain.Settings.csproj" />
+    <ProjectReference Include="..\..\Bai.General\Bai.General.ApplicationBuilder\Bai.General.ApplicationBuilder.csproj" />
+    <ProjectReference Include="..\..\Bai.General\Bai.General.JwtToken\Bai.General.JwtToken.csproj" />
+    <ProjectReference Include="..\..\Bai.General\Bai.General.Swagger\Bai.General.Swagger.csproj" />
+  </ItemGroup>
+
+</Project>
