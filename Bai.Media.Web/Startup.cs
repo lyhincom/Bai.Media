@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 namespace Bai.Media.Web
 {
@@ -64,7 +65,13 @@ namespace Bai.Media.Web
                 });
             });
 
-            context.Database.Migrate();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(env.WebRootPath),
+                RequestPath = "/Bai.Media.StaticFiles"
+            });
+
+            // context.Database.Migrate();
         }
     }
 }
