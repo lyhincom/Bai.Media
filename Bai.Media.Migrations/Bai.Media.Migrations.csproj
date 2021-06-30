@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Bai.General\Bai.General.Migrations\Bai.General.Migrations.csproj" />
+    <ProjectReference Include="..\Bai.Media.DAL\Bai.Media.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MigrationScripts\Data\" />
+    <Folder Include="MigrationScripts\Rollback\" />
+    <Folder Include="MigrationScripts\Schema\" />
+  </ItemGroup>
+
+</Project>

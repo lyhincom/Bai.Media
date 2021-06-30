@@ -5,9 +5,11 @@ using Bai.General.Environments;
 using Bai.General.Environments.Enums;
 using Bai.General.JwtToken;
 using Bai.General.Swagger;
+using Bai.Media.DAL.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,14 +34,14 @@ namespace Bai.Media.Web
 
             services.AddControllers();
 
-            //services.AddDbContext<CommentsDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>
-            //{
-            //    sql.MigrationsAssembly("Bai.Comments.Migrations");
-            //    sql.MigrationsHistoryTable("__EFMigrationsHistory", "dbo");
-            //}));
+            services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>
+            {
+                sql.MigrationsAssembly("Bai.Media.Migrations");
+                sql.MigrationsHistoryTable("__EFMigrationsHistory", "dbo");
+            }));
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MediaDbContext context)
         {
             app.UseDomainDeveloperExceptionPage(env);
             app.UseDomainHsts();
@@ -61,6 +63,8 @@ namespace Bai.Media.Web
                     await context.Response.WriteAsync("Good World!");
                 });
             });
+
+            context.Database.Migrate();
         }
     }
 }
