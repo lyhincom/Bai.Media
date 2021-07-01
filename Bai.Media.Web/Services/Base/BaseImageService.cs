@@ -7,6 +7,7 @@ using Bai.Media.DAL.Abstractions.Models;
 using Bai.Media.Web.Abstractions.Models;
 using Bai.Media.Web.Abstractions.Services;
 using ImageMagick;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Bai.Media.Web.Services.Base
 {
@@ -23,11 +24,13 @@ namespace Bai.Media.Web.Services.Base
             using var image = new MagickImage(memoryStream.ToArray());
             ValidateImage(image);
 
+            var fileExtension = Path.GetExtension(formImage.FileName);
+            var contentType = GetMimeTypeFromFileName(formImage.FileName);
             return new TEntity
             {
                 FileSizeInBytes = memoryStream.Length,
-                FileExtension = Path.GetExtension(formImage.FileName),
-                ContentType = formImage.ContentType,
+                FileExtension = fileExtension,
+                ContentType = contentType,
                 Height = image.Height,
                 Width = image.Width,
                 ImageBytes = memoryStream.ToArray()
@@ -51,6 +54,12 @@ namespace Bai.Media.Web.Services.Base
 
         private string GetWwwRootPath(TEntity entity) =>
             Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", GetFileName(entity));
+
+        private string GetMimeTypeFromFileName(string fileName)
+        {
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
+            return contentType ?? "application/octet-stream";
+        }
 
         private string GetFileName(TEntity entity) =>
             $"{entity.Id}{entity.FileExtension}";

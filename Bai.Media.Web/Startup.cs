@@ -1,6 +1,9 @@
+using System;
 using Bai.Domain.Settings;
 using Bai.Domain.Settings.Getters;
 using Bai.General.ApplicationBuilder;
+using Bai.General.DAL.Abstractions.Repositories;
+using Bai.General.DAL.Repositories;
 using Bai.General.Environments;
 using Bai.General.Environments.Enums;
 using Bai.General.JwtToken;
@@ -40,6 +43,9 @@ namespace Bai.Media.Web
 
             services.AddControllers();
 
+            services.AddTransient<IDomainRepository<AvatarEntity, Guid>, DomainRepository<AvatarEntity, Guid, MediaDbContext>>();
+            services.AddTransient<IDomainRepository<ImageEntity, Guid>, DomainRepository<ImageEntity, Guid, MediaDbContext>>();
+            services.AddTransient<IDomainRepository<LogoEntity, Guid>, DomainRepository<LogoEntity, Guid, MediaDbContext>>();
             services.AddTransient<IBaseImageService<Avatar, AvatarEntity>, AvatarService>();
             services.AddTransient<IBaseImageService<Image, ImageEntity>, ImageService>();
             services.AddTransient<IBaseImageService<Logo, LogoEntity>, LogoService>();
