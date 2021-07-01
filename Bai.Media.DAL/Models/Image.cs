@@ -22,5 +22,6 @@ namespace Bai.Media.DAL.Models
         public bool Deleted { get; set; }
 
         public Guid? ImageGroupId { get; set; }
+        public int? Priority { get; set; }
     }
 }
