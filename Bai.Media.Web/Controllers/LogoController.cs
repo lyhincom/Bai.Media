@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Bai.General.API.Controllers;
 using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
@@ -9,9 +8,9 @@ namespace Bai.Media.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ImageController : DomainController<Image, Guid>
+    public class LogoController : DomainController<Logo, Guid>
     {
-        public ImageController(IDomainRepository<Image, Guid> repository) : base(repository)
+        public LogoController(IDomainRepository<Logo, Guid> repository) : base(repository)
         {
         }
 

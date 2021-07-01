@@ -4,14 +4,16 @@ using Bai.Media.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bai.Media.Migrations.Migrations
 {
     [DbContext(typeof(MediaDbContext))]
-    partial class MediaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210701072821_UpdateAvatarImageLogoTablesSchema")]
+    partial class UpdateAvatarImageLogoTablesSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +45,6 @@ namespace Bai.Media.Migrations.Migrations
                         .HasColumnType("Int");
 
                     b.Property<byte[]>("ImageBytes")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<Guid>("UserId")
@@ -52,11 +53,8 @@ namespace Bai.Media.Migrations.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Avatar_Id");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("IX_Avatar_Key");
-
                     b.HasIndex("UserId", "FileExtension", "FileSize", "CreatedDt", "Deleted")
-                        .HasDatabaseName("IX_Avatar_QueryFields");
+                        .HasDatabaseName("IX_Avatar");
 
                     b.ToTable("Avatars", "dbo");
                 });
@@ -85,18 +83,13 @@ namespace Bai.Media.Migrations.Migrations
                         .HasColumnType("Int");
 
                     b.Property<byte[]>("ImageBytes")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<Guid?>("ImageGroupId")
+                    b.Property<Guid>("PageId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PageId")
-                        .HasColumnType("UniqueIdentifier");
-
                     b.Property<string>("PageType")
-                        .IsRequired()
-                        .HasColumnType("NVarChar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("UniqueIdentifier");
@@ -104,11 +97,8 @@ namespace Bai.Media.Migrations.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Image_Id");
 
-                    b.HasIndex("UserId", "PageId", "PageType", "ImageGroupId")
-                        .HasDatabaseName("IX_Image_Key");
-
-                    b.HasIndex("UserId", "PageId", "PageType", "ImageGroupId", "FileExtension", "FileSize", "CreatedDt", "Deleted")
-                        .HasDatabaseName("IX_Image_QueryFields");
+                    b.HasIndex("UserId", "FileExtension", "FileSize", "CreatedDt", "Deleted")
+                        .HasDatabaseName("IX_Image");
 
                     b.ToTable("Image", "dbo");
                 });
@@ -137,7 +127,6 @@ namespace Bai.Media.Migrations.Migrations
                         .HasColumnType("Int");
 
                     b.Property<byte[]>("ImageBytes")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<Guid>("PageId")
@@ -146,11 +135,8 @@ namespace Bai.Media.Migrations.Migrations
                     b.HasKey("Id")
                         .HasName("PK_Logo_Id");
 
-                    b.HasIndex("PageId")
-                        .HasDatabaseName("IX_Logo_Key");
-
                     b.HasIndex("PageId", "FileExtension", "FileSize", "CreatedDt", "Deleted")
-                        .HasDatabaseName("IX_Logo_QueryFields");
+                        .HasDatabaseName("IX_Logo");
 
                     b.ToTable("Logo", "dbo");
                 });

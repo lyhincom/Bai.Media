@@ -4,14 +4,16 @@ using Bai.Media.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bai.Media.Migrations.Migrations
 {
     [DbContext(typeof(MediaDbContext))]
-    partial class MediaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210701075515_SetImageBytesColumnNotNullForAllTables")]
+    partial class SetImageBytesColumnNotNullForAllTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,7 +90,7 @@ namespace Bai.Media.Migrations.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<Guid?>("ImageGroupId")
+                    b.Property<Guid>("ImageGroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PageId")
