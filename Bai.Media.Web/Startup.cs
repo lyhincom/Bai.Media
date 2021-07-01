@@ -6,6 +6,11 @@ using Bai.General.Environments.Enums;
 using Bai.General.JwtToken;
 using Bai.General.Swagger;
 using Bai.Media.DAL.Contexts;
+using Bai.Media.DAL.Models;
+using Bai.Media.Web.Abstractions.Services;
+using Bai.Media.Web.Models;
+using Bai.Media.Web.Services;
+using Bai.Media.Web.Services.Base;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +39,10 @@ namespace Bai.Media.Web
             services.AddDomainSwaggerGen(DomainClientIds.Media);
 
             services.AddControllers();
+
+            services.AddTransient<IBaseImageService<Avatar, AvatarEntity>, AvatarService>();
+            services.AddTransient<IBaseImageService<Image, ImageEntity>, ImageService>();
+            services.AddTransient<IBaseImageService<Logo, LogoEntity>, LogoService>();
 
             services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>
             {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bai.Media.Web", "Bai.Media.Web\Bai.Media.Web.csproj", "{77A4C994-FE0D-4146-A9CC-88A8A7CBE2DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.Media.Web", "Bai.Media.Web\Bai.Media.Web.csproj", "{77A4C994-FE0D-4146-A9CC-88A8A7CBE2DE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bai.General", "Bai.General", "{3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}"
 EndProject
@@ -17,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.General.Swagger", "..\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.General.ApplicationBuilder", "..\Bai.General\Bai.General.ApplicationBuilder\Bai.General.ApplicationBuilder.csproj", "{7B60AA7E-2789-4254-8ACE-5227206DCEDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bai.Media.DAL", "Bai.Media.DAL\Bai.Media.DAL.csproj", "{EB328A3E-4A54-41D6-B443-E717D4067642}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.Media.DAL", "Bai.Media.DAL\Bai.Media.DAL.csproj", "{EB328A3E-4A54-41D6-B443-E717D4067642}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bai.Media.Migrations", "Bai.Media.Migrations\Bai.Media.Migrations.csproj", "{CA215B12-2436-45DF-82D6-C49A34A65365}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.Media.Migrations", "Bai.Media.Migrations\Bai.Media.Migrations.csproj", "{CA215B12-2436-45DF-82D6-C49A34A65365}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.General.DAL", "..\Bai.General\Bai.General.DAL\Bai.General.DAL.csproj", "{B916FD2E-F405-4FB1-989D-302DFB037AC7}"
 EndProject

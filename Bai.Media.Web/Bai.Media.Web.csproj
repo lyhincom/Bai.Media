@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,6 +29,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\Avatars\" />
     <Folder Include="wwwroot\Images\" />
+    <Folder Include="wwwroot\Logos\" />
     <Folder Include="wwwroot\Predefined\Watermarks\" />
   </ItemGroup>
 

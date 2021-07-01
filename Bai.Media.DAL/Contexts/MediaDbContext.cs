@@ -11,15 +11,15 @@ namespace Bai.Media.DAL.Contexts
         {
         }
 
-        public DbSet<Avatar> Avatars { get; set; }
-        public DbSet<Image> Images { get; set; }
+        public DbSet<AvatarEntity> Avatars { get; set; }
+        public DbSet<ImageEntity> Images { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             // dbo.Avatar
-            builder.Entity<Avatar>(indexOptions =>
+            builder.Entity<AvatarEntity>(indexOptions =>
             {
                 indexOptions.ToTable("Avatars", "dbo");
                 indexOptions.HasKey(avatar => avatar.Id)
@@ -28,24 +28,27 @@ namespace Bai.Media.DAL.Contexts
                 indexOptions.HasIndex(avatar => new { avatar.UserId })
                             .HasDatabaseName("IX_Avatar_Key");
                 indexOptions.HasIndex(avatar => new { avatar.UserId,
-                                                      avatar.FileExtension, avatar.FileSize, avatar.CreatedDt, avatar.Deleted })
+                                                      avatar.FileExtension, avatar.FileSizeInBytes, avatar.CreatedDt, avatar.Deleted })
                             .HasDatabaseName("IX_Avatar_QueryFields");
             });
-            builder.Entity<Avatar>(propertyOptions =>
+            builder.Entity<AvatarEntity>(propertyOptions =>
             {
                 propertyOptions.PropertyDefault(x => x.Id).HasDefaultValueSql("NEWID()");
                 
                 propertyOptions.PropertyDefault(x => x.UserId);
                 
                 propertyOptions.PropertySizeDefault(x => x.FileExtension, 10);
-                propertyOptions.PropertyDefault(x => x.FileSize);
+                propertyOptions.PropertyDefault(x => x.FileSizeInBytes);
+                propertyOptions.PropertyDefault(x => x.Width);
+                propertyOptions.PropertyDefault(x => x.Height);
+                propertyOptions.PropertySizeDefault(x => x.ContentType, 30);
                 propertyOptions.Property(x => x.ImageBytes).HasColumnType("varbinary(max)").IsRequired();
                 propertyOptions.PropertyDefault(x => x.CreatedDt).HasDefaultValueSql("GetUtcDate()");
                 propertyOptions.PropertyDefault(x => x.Deleted).HasDefaultValue(false);
             });
 
             // dbo.Image
-            builder.Entity<Image>(indexOptions =>
+            builder.Entity<ImageEntity>(indexOptions =>
             {
                 indexOptions.ToTable("Image", "dbo");
                 indexOptions.HasKey(image => image.Id)
@@ -57,10 +60,10 @@ namespace Bai.Media.DAL.Contexts
                                                      image.ImageGroupId, image.Priority })
                             .HasDatabaseName("IX_Image_ImageGroupPriority");
                 indexOptions.HasIndex(image => new { image.UserId, image.PageId, image.PageType,
-                                                     image.FileExtension, image.FileSize, image.CreatedDt, image.Deleted })
+                                                     image.FileExtension, image.FileSizeInBytes, image.CreatedDt, image.Deleted })
                             .HasDatabaseName("IX_Image_QueryFields");
             });
-            builder.Entity<Image>(propertyOptions =>
+            builder.Entity<ImageEntity>(propertyOptions =>
             {
                 propertyOptions.PropertyDefault(x => x.Id).HasDefaultValueSql("NEWID()");
                 
@@ -71,7 +74,10 @@ namespace Bai.Media.DAL.Contexts
                 propertyOptions.PropertyDefault(x => x.Priority);
 
                 propertyOptions.PropertySizeDefault(x => x.FileExtension, 10);
-                propertyOptions.PropertyDefault(x => x.FileSize);
+                propertyOptions.PropertyDefault(x => x.FileSizeInBytes);
+                propertyOptions.PropertyDefault(x => x.Width);
+                propertyOptions.PropertyDefault(x => x.Height);
+                propertyOptions.PropertySizeDefault(x => x.ContentType, 30);
                 propertyOptions.Property(x => x.ImageBytes).HasColumnType("varbinary(max)").IsRequired();
                 propertyOptions.PropertyDefault(x => x.CreatedDt).HasDefaultValueSql("GetUtcDate()");
                 propertyOptions.PropertyDefault(x => x.Deleted).HasDefaultValue(false);
@@ -79,7 +85,7 @@ namespace Bai.Media.DAL.Contexts
             });
 
             // dbo.Logo
-            builder.Entity<Logo>(indexOptions =>
+            builder.Entity<LogoEntity>(indexOptions =>
             {
                 indexOptions.ToTable("Logo", "dbo");
                 indexOptions.HasKey(logo => logo.Id)
@@ -88,17 +94,20 @@ namespace Bai.Media.DAL.Contexts
                 indexOptions.HasIndex(logo => new { logo.PageId })
                             .HasDatabaseName("IX_Logo_Key");
                 indexOptions.HasIndex(logo => new { logo.PageId,
-                                                    logo.FileExtension, logo.FileSize, logo.CreatedDt, logo.Deleted })
+                                                    logo.FileExtension, logo.FileSizeInBytes, logo.CreatedDt, logo.Deleted })
                             .HasDatabaseName("IX_Logo_QueryFields");
             });
-            builder.Entity<Logo>(propertyOptions =>
+            builder.Entity<LogoEntity>(propertyOptions =>
             {
                 propertyOptions.PropertyDefault(x => x.Id).HasDefaultValueSql("NEWID()");
                 
                 propertyOptions.PropertyDefault(x => x.PageId);
 
                 propertyOptions.PropertySizeDefault(x => x.FileExtension, 10);
-                propertyOptions.PropertyDefault(x => x.FileSize);
+                propertyOptions.PropertyDefault(x => x.FileSizeInBytes);
+                propertyOptions.PropertyDefault(x => x.Width);
+                propertyOptions.PropertyDefault(x => x.Height);
+                propertyOptions.PropertySizeDefault(x => x.ContentType, 30);
                 propertyOptions.Property(x => x.ImageBytes).HasColumnType("varbinary(max)").IsRequired();
                 propertyOptions.PropertyDefault(x => x.CreatedDt).HasDefaultValueSql("GetUtcDate()");
                 propertyOptions.PropertyDefault(x => x.Deleted).HasDefaultValue(false);

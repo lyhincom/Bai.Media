@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bai.Media.Migrations.Migrations
 {
     [DbContext(typeof(MediaDbContext))]
-    [Migration("20210701082451_AddImagePriorityColumn")]
-    partial class AddImagePriorityColumn
+    [Migration("20210701122317_BaiMediaAdjustTableSchema")]
+    partial class BaiMediaAdjustTableSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,12 +21,15 @@ namespace Bai.Media.Migrations.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Bai.Media.DAL.Models.Avatar", b =>
+            modelBuilder.Entity("Bai.Media.DAL.Models.AvatarEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("UniqueIdentifier")
                         .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDt")
                         .ValueGeneratedOnAdd()
@@ -38,10 +41,14 @@ namespace Bai.Media.Migrations.Migrations
                         .HasColumnType("Bit")
                         .HasDefaultValue(false);
 
-                    b.Property<Guid>("FileExtension")
-                        .HasColumnType("UniqueIdentifier");
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("NVarChar(10)");
 
-                    b.Property<int>("FileSize")
+                    b.Property<long>("FileSizeInBytes")
+                        .HasColumnType("BigInt");
+
+                    b.Property<int>("Height")
                         .HasColumnType("Int");
 
                     b.Property<byte[]>("ImageBytes")
@@ -51,24 +58,30 @@ namespace Bai.Media.Migrations.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("UniqueIdentifier");
 
+                    b.Property<int>("Width")
+                        .HasColumnType("Int");
+
                     b.HasKey("Id")
                         .HasName("PK_Avatar_Id");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("IX_Avatar_Key");
 
-                    b.HasIndex("UserId", "FileExtension", "FileSize", "CreatedDt", "Deleted")
+                    b.HasIndex("UserId", "FileExtension", "FileSizeInBytes", "CreatedDt", "Deleted")
                         .HasDatabaseName("IX_Avatar_QueryFields");
 
                     b.ToTable("Avatars", "dbo");
                 });
 
-            modelBuilder.Entity("Bai.Media.DAL.Models.Image", b =>
+            modelBuilder.Entity("Bai.Media.DAL.Models.ImageEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("UniqueIdentifier")
                         .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDt")
                         .ValueGeneratedOnAdd()
@@ -80,10 +93,14 @@ namespace Bai.Media.Migrations.Migrations
                         .HasColumnType("Bit")
                         .HasDefaultValue(false);
 
-                    b.Property<Guid>("FileExtension")
-                        .HasColumnType("UniqueIdentifier");
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("NVarChar(10)");
 
-                    b.Property<int>("FileSize")
+                    b.Property<long>("FileSizeInBytes")
+                        .HasColumnType("BigInt");
+
+                    b.Property<int>("Height")
                         .HasColumnType("Int");
 
                     b.Property<byte[]>("ImageBytes")
@@ -106,6 +123,9 @@ namespace Bai.Media.Migrations.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("UniqueIdentifier");
 
+                    b.Property<int>("Width")
+                        .HasColumnType("Int");
+
                     b.HasKey("Id")
                         .HasName("PK_Image_Id");
 
@@ -115,18 +135,21 @@ namespace Bai.Media.Migrations.Migrations
                     b.HasIndex("UserId", "PageId", "PageType", "ImageGroupId", "Priority")
                         .HasDatabaseName("IX_Image_ImageGroupPriority");
 
-                    b.HasIndex("UserId", "PageId", "PageType", "FileExtension", "FileSize", "CreatedDt", "Deleted")
+                    b.HasIndex("UserId", "PageId", "PageType", "FileExtension", "FileSizeInBytes", "CreatedDt", "Deleted")
                         .HasDatabaseName("IX_Image_QueryFields");
 
                     b.ToTable("Image", "dbo");
                 });
 
-            modelBuilder.Entity("Bai.Media.DAL.Models.Logo", b =>
+            modelBuilder.Entity("Bai.Media.DAL.Models.LogoEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("UniqueIdentifier")
                         .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDt")
                         .ValueGeneratedOnAdd()
@@ -138,10 +161,14 @@ namespace Bai.Media.Migrations.Migrations
                         .HasColumnType("Bit")
                         .HasDefaultValue(false);
 
-                    b.Property<Guid>("FileExtension")
-                        .HasColumnType("UniqueIdentifier");
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("NVarChar(10)");
 
-                    b.Property<int>("FileSize")
+                    b.Property<long>("FileSizeInBytes")
+                        .HasColumnType("BigInt");
+
+                    b.Property<int>("Height")
                         .HasColumnType("Int");
 
                     b.Property<byte[]>("ImageBytes")
@@ -151,13 +178,16 @@ namespace Bai.Media.Migrations.Migrations
                     b.Property<Guid>("PageId")
                         .HasColumnType("UniqueIdentifier");
 
+                    b.Property<int>("Width")
+                        .HasColumnType("Int");
+
                     b.HasKey("Id")
                         .HasName("PK_Logo_Id");
 
                     b.HasIndex("PageId")
                         .HasDatabaseName("IX_Logo_Key");
 
-                    b.HasIndex("PageId", "FileExtension", "FileSize", "CreatedDt", "Deleted")
+                    b.HasIndex("PageId", "FileExtension", "FileSizeInBytes", "CreatedDt", "Deleted")
                         .HasDatabaseName("IX_Logo_QueryFields");
 
                     b.ToTable("Logo", "dbo");
