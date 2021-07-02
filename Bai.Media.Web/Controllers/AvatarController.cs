@@ -15,37 +15,43 @@ namespace Bai.Media.Web.Controllers
     {
         private readonly IDomainRepository<AvatarEntity, Guid> _repository;
         private readonly IBaseImageService<Avatar, AvatarEntity> _baseImageService;
+        private readonly IFileSystemService _fileSystemService;
 
-        public AvatarController(IDomainRepository<AvatarEntity, Guid> repository, IBaseImageService<Avatar, AvatarEntity> baseImageService)
+        public AvatarController(IDomainRepository<AvatarEntity, Guid> repository,
+                                IBaseImageService<Avatar, AvatarEntity> baseImageService,
+                                IFileSystemService fileSystemService)
         {
             _repository = repository;
             _baseImageService = baseImageService;
+            _fileSystemService = fileSystemService;
         }
 
         [HttpPost]
-        public virtual async Task<ActionResult> Post([ModelBinder(typeof(AvatarBinder))] Avatar entity)
+        public virtual async Task<ActionResult> Post([ModelBinder(typeof(AvatarBinder))] Avatar model)
         {
-            if (entity.FormImage.ContentType == "image/png" ||
-                entity.FormImage.ContentType == "image/jpg" ||
-                entity.FormImage.ContentType == "image/jpeg" ||
-                entity.FormImage.ContentType == "image/gif")
+            if (model.FormImage.ContentType == "image/png" ||
+                model.FormImage.ContentType == "image/jpg" ||
+                model.FormImage.ContentType == "image/jpeg" ||
+                model.FormImage.ContentType == "image/gif")
             {
                 throw new Exception("Allowed image ContentTypes: png, jpg, jpeg, gif.");
             }
 
-            if (entity.FormImage.Length < 512)
+            if (model.FormImage.Length < 512)
             {
                 throw new Exception("Image is too small to upload.");
             }
 
-            if (entity.FormImage.Length > 300000)
+            if (model.FormImage.Length > 300000)
             {
                 throw new Exception("Image is too large to upload.");
             }
 
-            var newUserAvatar = await AddOrUpdateUserAvatar(entity);
-            var databaseUrl = _baseImageService.GetDatabaseUrl(newUserAvatar, "avatar");
-            var fileSystemUrl = _baseImageService.GetFileSystemUrl(newUserAvatar, "avatars");
+            var newUserAvatar = await AddOrUpdateUserAvatar(model);
+            var databaseUrl = _baseImageService.GetDatabaseUrl(newUserAvatar, model.UserId, "avatar");
+            var fileSystemUrl = _baseImageService.GetFileSystemUrl(newUserAvatar, model.UserId, "avatars");
+
+            await SaveImageUrlsToDatabase(newUserAvatar, databaseUrl, fileSystemUrl);
 
             return Ok(new MediaUrl
             {
@@ -54,31 +60,61 @@ namespace Bai.Media.Web.Controllers
             });
         }
 
-        [HttpGet("{imageId}")]
-        public async Task<ActionResult> GetAvatarFromDatabase(Guid imageId)
+        [HttpGet("{userId}")]
+        public async Task<ActionResult> GetAvatarFromDatabase(Guid userId)
         {
-            var userAvatar = await _repository.GetEntity(avatar => avatar.Id == imageId);
+            var userAvatar = await _repository.GetEntity(avatar => avatar.UserId == userId && avatar.Deleted == false);
+            if (userAvatar == null)
+            {
+                return Ok(string.Empty);
+            }
+
             return File(userAvatar.ImageBytes, userAvatar.ContentType);
         }
 
-        private async Task<AvatarEntity> AddOrUpdateUserAvatar(Avatar entity)
+        private async Task<AvatarEntity> AddOrUpdateUserAvatar(Avatar model)
         {
-            var userAvatar = await _repository.GetEntity(avatar => avatar.UserId == entity.UserId, asNoTracking: true);
-            var newUserAvatar = _baseImageService.GetFileMetadata(entity);
-            if (userAvatar == null)
+            var entity = await _repository.GetEntity(avatar => avatar.UserId == model.UserId, asNoTracking: true);
+            var newUserAvatar = _baseImageService.GetFileMetadata(model);
+            var fileName = $"{model.UserId}{_fileSystemService.GetFileExtension(model.FormImage)}";
+
+            if (entity == null)
             {
-                newUserAvatar.UserId = entity.UserId;
+                // Database
+                newUserAvatar.UserId = model.UserId;
                 await _repository.AddEntity(newUserAvatar, true);
+
+                // FileSystem
+                await _fileSystemService.AddFileToWwwRoot(model.FormImage, "Avatars", fileName);
+
                 return newUserAvatar;
             }
 
-            userAvatar.Deleted = true;
-            await _repository.UpdateEntity(userAvatar);
+            // Database
+            try
+            {
+                entity.Deleted = true;
+                await _repository.UpdateEntity(entity);
+                newUserAvatar.UserId = model.UserId;
+                await _repository.AddEntity(newUserAvatar, true);
+            }
+            catch (Exception e)
+            {
+                var x = e.Message;
+            }
 
-            newUserAvatar.UserId = entity.UserId;
-            await _repository.AddEntity(newUserAvatar, true);
-            
+            // FileSystem
+            await _fileSystemService.ArchiveWwwRootFile("Avatars", fileName);
+            await _fileSystemService.AddFileToWwwRoot(model.FormImage, "Avatars", fileName);
+
             return newUserAvatar;
+        }
+
+        private async Task SaveImageUrlsToDatabase(AvatarEntity newUserAvatar, string databaseUrl, string fileSystemUrl)
+        {
+            newUserAvatar.DatabaseUrl = databaseUrl;
+            newUserAvatar.FileSystemUrl = fileSystemUrl;
+            await _repository.UpdateEntity(newUserAvatar, true);
         }
     }
 }

@@ -49,7 +49,8 @@ namespace Bai.Media.Web
             services.AddTransient<IBaseImageService<Avatar, AvatarEntity>, AvatarService>();
             services.AddTransient<IBaseImageService<Image, ImageEntity>, ImageService>();
             services.AddTransient<IBaseImageService<Logo, LogoEntity>, LogoService>();
-
+            services.AddTransient<IFileSystemService, FileSystemService>();
+            
             services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>
             {
                 sql.MigrationsAssembly("Bai.Media.Migrations");

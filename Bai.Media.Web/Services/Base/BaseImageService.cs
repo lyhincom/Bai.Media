@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System;
+using System.IO;
 using Bai.Domain.Settings.Getters;
 using Bai.General.API;
 using Bai.General.DAL.Abstractions.Models;
@@ -37,23 +37,13 @@ namespace Bai.Media.Web.Services.Base
             };
         }
 
-        public abstract void ValidateImage(MagickImage image);
+        public string GetDatabaseUrl(TEntity entity, Guid keyId, string controllerName) =>
+            DomainUrl.Combine(DomainUrls.Client, "api", controllerName, keyId.ToString()).ToLower();
 
-        public async Task SaveToFileSystem(TModel model, TEntity entity)
-        {
-            var filePath = GetWwwRootPath(entity);
-            using var fileStream = new FileStream(filePath, FileMode.Create);
-            await model.FormImage.CopyToAsync(fileStream);
-        }
+        public string GetFileSystemUrl(TEntity entity, Guid keyId, string folderName) =>
+            DomainUrl.Combine(DomainUrls.Client, "Bai.Media.StaticFiles", folderName, GetFileName(entity, keyId)).ToLower();
 
-        public string GetDatabaseUrl(TEntity entity, string controllerName) =>
-            DomainUrl.Combine(DomainUrls.Media, "api", controllerName, entity.Id.ToString());
-
-        public string GetFileSystemUrl(TEntity entity, string folderName) =>
-            DomainUrl.Combine(DomainUrls.Media, "Bai.Media.StaticFiles", folderName, GetFileName(entity));
-
-        private string GetWwwRootPath(TEntity entity) =>
-            Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", GetFileName(entity));
+        protected abstract void ValidateImage(MagickImage image);
 
         private string GetMimeTypeFromFileName(string fileName)
         {
@@ -61,7 +51,7 @@ namespace Bai.Media.Web.Services.Base
             return contentType ?? "application/octet-stream";
         }
 
-        private string GetFileName(TEntity entity) =>
-            $"{entity.Id}{entity.FileExtension}";
+        private string GetFileName(TEntity entity, Guid keyId) =>
+            $"{keyId}{entity.FileExtension}";
     }
 }

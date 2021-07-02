@@ -7,7 +7,7 @@ namespace Bai.Media.Web.Services
 {
     public class ImageService : BaseImageService<Image, ImageEntity>
     {
-        public override void ValidateImage(MagickImage image)
+        protected override void ValidateImage(MagickImage image)
         {
         }
     }

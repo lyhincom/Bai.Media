@@ -8,7 +8,7 @@ namespace Bai.Media.Web.Services
 {
     public class AvatarService : BaseImageService<Avatar, AvatarEntity>
     {
-        public override void ValidateImage(MagickImage image)
+        protected override void ValidateImage(MagickImage image)
         {
             if (image.Width != image.Height)
             {

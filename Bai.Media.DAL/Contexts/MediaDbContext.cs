@@ -45,6 +45,8 @@ namespace Bai.Media.DAL.Contexts
                 propertyOptions.Property(x => x.ImageBytes).HasColumnType("varbinary(max)").IsRequired();
                 propertyOptions.PropertyDefault(x => x.CreatedDt).HasDefaultValueSql("GetUtcDate()");
                 propertyOptions.PropertyDefault(x => x.Deleted).HasDefaultValue(false);
+                propertyOptions.Property(x => x.DatabaseUrl).HasColumnType("nvarchar(200)");
+                propertyOptions.Property(x => x.FileSystemUrl).HasColumnType("nvarchar(200)");
             });
 
             // dbo.Image
@@ -81,7 +83,8 @@ namespace Bai.Media.DAL.Contexts
                 propertyOptions.Property(x => x.ImageBytes).HasColumnType("varbinary(max)").IsRequired();
                 propertyOptions.PropertyDefault(x => x.CreatedDt).HasDefaultValueSql("GetUtcDate()");
                 propertyOptions.PropertyDefault(x => x.Deleted).HasDefaultValue(false);
-                
+                propertyOptions.Property(x => x.DatabaseUrl).HasColumnType("nvarchar(200)");
+                propertyOptions.Property(x => x.FileSystemUrl).HasColumnType("nvarchar(200)");
             });
 
             // dbo.Logo
@@ -111,6 +114,8 @@ namespace Bai.Media.DAL.Contexts
                 propertyOptions.Property(x => x.ImageBytes).HasColumnType("varbinary(max)").IsRequired();
                 propertyOptions.PropertyDefault(x => x.CreatedDt).HasDefaultValueSql("GetUtcDate()");
                 propertyOptions.PropertyDefault(x => x.Deleted).HasDefaultValue(false);
+                propertyOptions.Property(x => x.DatabaseUrl).HasColumnType("nvarchar(200)");
+                propertyOptions.Property(x => x.FileSystemUrl).HasColumnType("nvarchar(200)");
             });
         }
     }
