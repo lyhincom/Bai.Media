@@ -10,6 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bai.Media.Web.Controllers
 {
+    /// <summary>
+    /// Avatar media has 1:1 proportion
+    /// Avatar media does not have a Watermark
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class AvatarController : ControllerBase

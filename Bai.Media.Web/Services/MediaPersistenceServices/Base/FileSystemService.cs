@@ -7,16 +7,22 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
 {
     public class FileSystemService : IFileSystemService
     {
-        public async Task AddFileToWwwRoot(IFormFile formFile, string wwwRootDirectoryPath, string fileName)
+        public async Task AddFileToWwwRoot(IFormFile formFile, string wwwRootDirectoryPath, params string[] fileNames)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, fileName);
-            await AddFileToPath(formFile, filePath);
+            foreach(var fileName in fileNames)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, fileName);
+                await AddFileToPath(formFile, filePath);
+            }
         }
 
-        public void ArchiveWwwRootFile(string wwwRootDirectoryPath, string fileName)
+        public void ArchiveWwwRootFile(string wwwRootDirectoryPath, params string[] fileNames)
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, fileName);
-            ArchiveFile(filePath);
+            foreach (var fileName in fileNames)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, fileName);
+                ArchiveFile(filePath);
+            }
         }
 
         public string GetFileExtension(IFormFile filePath) =>

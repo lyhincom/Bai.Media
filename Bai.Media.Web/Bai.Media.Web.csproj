@@ -28,9 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Avatars\" />
-    <Folder Include="wwwroot\Images\" />
-    <Folder Include="wwwroot\Logos\" />
+    <Folder Include="wwwroot\Avatar\" />
+    <Folder Include="wwwroot\Image\" />
+    <Folder Include="wwwroot\Logo\" />
     <Folder Include="wwwroot\Predefined\Watermarks\" />
   </ItemGroup>
 

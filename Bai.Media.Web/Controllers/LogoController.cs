@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bai.Media.Web.Controllers
 {
+    /// <summary>
+    /// Logo media has rectangle or square 1:1 proportion
+    /// Logo media does not have a Watermark
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class LogoController : ControllerBase

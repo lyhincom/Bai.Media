@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Bai.Domain.Settings.Getters;
 using Bai.General.DAL.Abstractions.Repositories;
@@ -15,6 +14,13 @@ using DrawingImage = System.Drawing.Image;
 
 namespace Bai.Media.Web.Controllers
 {
+    /// <summary>
+    /// 1. Image API persists RawImage to database without Watermark, max Image quality;
+    /// 2. All non-database images must have a Watermark;
+    /// 3. Image API persists Thumbnail media to FileSystem (for SchoolImage page type) for Bai.Search;
+    /// 4. Image API persists Medium media to FileSystem (for SchoolImage and ActivityImage page type) for Provider page and Activity page;
+    /// 5. FileSystem images can be regenerated with a new Watermark from RawImage in database;
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class ImageController : ControllerBase
@@ -36,26 +42,20 @@ namespace Bai.Media.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetProcessedImage(Guid pageId, string pageType, ImageSizeEnum imageSize = ImageSizeEnum.Thumbnail)
+        public ActionResult GetProcessedImageFromFileSystem(Guid pageId, string imageType, ImageSizeEnum imageSize = ImageSizeEnum.Thumbnail)
         {
-            using var webClient = new WebClient();
-            string imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/images/calendar-application.jpg"; // ToDo: read Watermarked Image from FileSystem
-            string watermarkUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/watermarks/default.png";
-
-            var imageBytes = webClient.DownloadData(imageUrl);
-            var watermarkBytes = webClient.DownloadData(watermarkUrl);
-
-            using var image = MediaService.GetImageFromByteArray(imageBytes);
-            using var watermark = MediaService.GetImageFromByteArray(watermarkBytes);
-
-            DrawingImage resizedImage = null;
-            if (imageSize == ImageSizeEnum.Thumbnail && IsStandardImageSize(image))
+            if (pageId == default)
             {
-                resizedImage = _mediaProcessingService.ResizeImage(image);
+                throw new ArgumentException($"{nameof(pageId)} cannot be default Guid");
             }
 
-            var processedImage = _mediaProcessingService.AddWatermarkSystemDrawing(resizedImage, watermark);
-            var processedImageBytes = MediaService.ImageToByteArray(processedImage);
+            if (imageType != ImageTypes.SchoolImage && imageType != ImageTypes.ActivityImage)
+            {
+                throw new ArgumentException($"{nameof(imageType)} should be: 'SchoolImage' or 'ActivityImage'");
+            }
+
+            var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/images/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
+            var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
 
             return File(processedImageBytes, "image/jpeg");
         }
@@ -69,7 +69,39 @@ namespace Bai.Media.Web.Controllers
             return Ok(mediaUrl);
         }
 
-#region Debug
+
+        //public ActionResult PostResize(Guid pageId, string imageType, ImageSizeEnum imageSize = ImageSizeEnum.Thumbnail)
+        //{
+        //    if (pageId == default)
+        //    {
+        //        throw new ArgumentException($"{nameof(pageId)} cannot be default Guid");
+        //    }
+
+        //    if (imageType != ImageTypes.SchoolImage && imageType != ImageTypes.ActivityImage)
+        //    {
+        //        throw new ArgumentException($"{nameof(imageType)} should be: 'SchoolImage' or 'ActivityImage'");
+        //    }
+
+        //    var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/images/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
+        //    var watermarkUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/watermarks/default.png";
+
+        //    using var image = MediaService.DownloadImageFromUrl(imageUrl);
+        //    using var watermark = MediaService.DownloadImageFromUrl(watermarkUrl);
+
+        //    DrawingImage resizedImage = null;
+        //    if (imageSize == ImageSizeEnum.Thumbnail && IsStandardImageSize(image))
+        //    {
+        //        resizedImage = _mediaProcessingService.ResizeImage(image);
+        //    }
+
+        //    var processedImage = _mediaProcessingService.AddWatermarkSystemDrawing(resizedImage, watermark);
+        //    var processedImageBytes = MediaService.ImageToByteArray(processedImage);
+
+        //    return File(processedImageBytes, "image/jpeg");
+        //}
+
+
+        #region Debug
 
         [HttpDelete]
         public virtual async Task<ActionResult> Delete(Guid pageId, string pageType)
