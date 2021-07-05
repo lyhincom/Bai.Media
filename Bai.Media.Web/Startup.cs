@@ -11,9 +11,11 @@ using Bai.General.Swagger;
 using Bai.Media.DAL.Contexts;
 using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
+using Bai.Media.Web.Abstractions.Services.PersistenceServices;
 using Bai.Media.Web.Models;
 using Bai.Media.Web.Services;
-using Bai.Media.Web.Services.Base;
+using Bai.Media.Web.Services.MediaPersistenceServices;
+using Bai.Media.Web.Services.ValidationServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -46,9 +48,13 @@ namespace Bai.Media.Web
             services.AddTransient<IDomainRepository<AvatarEntity, Guid>, DomainRepository<AvatarEntity, Guid, MediaDbContext>>();
             services.AddTransient<IDomainRepository<ImageEntity, Guid>, DomainRepository<ImageEntity, Guid, MediaDbContext>>();
             services.AddTransient<IDomainRepository<LogoEntity, Guid>, DomainRepository<LogoEntity, Guid, MediaDbContext>>();
-            services.AddTransient<IBaseImageService<Avatar, AvatarEntity>, AvatarService>();
-            services.AddTransient<IBaseImageService<Image, ImageEntity>, ImageService>();
-            services.AddTransient<IBaseImageService<Logo, LogoEntity>, LogoService>();
+            services.AddTransient<IPersistenceService<Avatar>, PersistenceService>();
+
+            services.AddTransient<IFormFileValidationService, FormFileValidationService>();
+            services.AddTransient<IMagicImageValidationService<Avatar, AvatarEntity>, AvatarValidationService>();
+            services.AddTransient<IMagicImageValidationService<Image, ImageEntity>, ImageValidationService>();
+            services.AddTransient<IMagicImageValidationService<Logo, LogoEntity>, LogoValidationService>();
+
             services.AddTransient<IFileSystemService, FileSystemService>();
             
             services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>

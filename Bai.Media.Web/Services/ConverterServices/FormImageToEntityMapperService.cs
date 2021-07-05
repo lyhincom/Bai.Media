@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using Bai.Domain.Settings.Getters;
-using Bai.General.API;
+﻿using System.IO;
 using Bai.General.DAL.Abstractions.Models;
 using Bai.Media.DAL.Abstractions.Models;
 using Bai.Media.Web.Abstractions.Models;
@@ -9,20 +6,25 @@ using Bai.Media.Web.Abstractions.Services;
 using ImageMagick;
 using Microsoft.AspNetCore.StaticFiles;
 
-namespace Bai.Media.Web.Services.Base
+namespace Bai.Media.Web.Services.ConverterServices
 {
-    public abstract class BaseImageService<TModel, TEntity> : IBaseImageService<TModel, TEntity>
+    public abstract class FormImageToEntityMapperService<TModel, TEntity> : IFormImageToEntityConverterService<TModel, TEntity>
         where TModel : IFormImage
         where TEntity : GuidEntity, IImage, new()
     {
-        public TEntity GetFileMetadata(IFormImage model)
+        private readonly IMagicImageValidationService<TModel, TEntity> _mediaValidationService;
+
+        public FormImageToEntityMapperService(IMagicImageValidationService<TModel, TEntity> mediaValidationService) =>
+            _mediaValidationService = mediaValidationService;
+
+        public TEntity GetEntityFromFormImage(IFormImage model)
         {
             var formImage = model.FormImage;
             using var memoryStream = new MemoryStream();
             formImage.CopyTo(memoryStream);
 
             using var image = new MagickImage(memoryStream.ToArray());
-            ValidateImage(image);
+            _mediaValidationService.ValidateImage(image);
 
             var fileExtension = Path.GetExtension(formImage.FileName);
             var contentType = GetMimeTypeFromFileName(formImage.FileName);
@@ -37,21 +39,10 @@ namespace Bai.Media.Web.Services.Base
             };
         }
 
-        public string GetDatabaseUrl(TEntity entity, Guid keyId, string controllerName) =>
-            DomainUrl.Combine(DomainUrls.Client, "api", controllerName, keyId.ToString()).ToLower();
-
-        public string GetFileSystemUrl(TEntity entity, Guid keyId, string folderName) =>
-            DomainUrl.Combine(DomainUrls.Client, "Bai.Media.StaticFiles", folderName, GetFileName(entity, keyId)).ToLower();
-
-        protected abstract void ValidateImage(MagickImage image);
-
         private string GetMimeTypeFromFileName(string fileName)
         {
             new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
             return contentType ?? "application/octet-stream";
         }
-
-        private string GetFileName(TEntity entity, Guid keyId) =>
-            $"{keyId}{entity.FileExtension}";
     }
 }

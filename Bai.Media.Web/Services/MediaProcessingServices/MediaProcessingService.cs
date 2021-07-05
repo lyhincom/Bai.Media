@@ -3,14 +3,17 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using Bai.Media.Web.Abstractions.Services;
 using ImageMagick;
 
-namespace Bai.Media.Web.Services.MediaServices
+namespace Bai.Media.Web.Services.MediaProcessingServices
 {
-    public class WatermarkService
+    public class MediaProcessingService : IMediaProcessingService
     {
-        public MagickImage AddWatermark(Stream imageStream, Stream watermarkStream)
+        public MagickImage AddWatermarkMagickImage(Stream imageStream, Stream watermarkStream)
         {
+            throw new NotImplementedException();
+
             using var image = new MagickImage(imageStream);
             using var watermark = new MagickImage(watermarkStream);
 
@@ -36,13 +39,13 @@ namespace Bai.Media.Web.Services.MediaServices
             return image;
         }
 
-        public Image AddWatermark2(Image image, Image watermark)
+        public Image AddWatermarkSystemDrawing(Image image, Image watermark)
         {
             using (Graphics imageGraphics = Graphics.FromImage(image))
             using (var watermarkBrush = new TextureBrush(watermark))
             {
-                int x = (image.Width - 30 - watermark.Width);
-                int y = (image.Height - 20 - watermark.Height);
+                int x = image.Width - 30 - watermark.Width;
+                int y = image.Height - 20 - watermark.Height;
 
                 // https://stackoverflow.com/questions/4113900/c-sharp-add-watermark-to-the-photo-by-special-way
                 watermarkBrush.TranslateTransform(x, y);
@@ -66,11 +69,9 @@ namespace Bai.Media.Web.Services.MediaServices
                 graphics.SmoothingMode = SmoothingMode.HighQuality;
                 graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                using (var wrapMode = new ImageAttributes())
-                {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-                }
+                using var wrapMode = new ImageAttributes();
+                wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
             }
 
             return destImage;

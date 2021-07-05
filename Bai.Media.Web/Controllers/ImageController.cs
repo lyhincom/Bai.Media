@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
-using Bai.Media.Web.Services.MediaServices;
+using Bai.Media.Web.Services.MediaProcessingServices;
 using ImageMagick;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +26,7 @@ namespace Bai.Media.Web.Controllers
         //    Ok(await _repository.AddEntity(entity, true));
 
         [HttpGet]
-        public async Task<ActionResult> WatermarkImage() => GetWatermarkImage();
+        public ActionResult WatermarkImage() => GetWatermarkImage();
 
         private ActionResult WatermarkMagicImage()
         {
@@ -40,7 +40,7 @@ namespace Bai.Media.Web.Controllers
             var imageStream = GetStreamFromByteArray(imageBytes);
             var watermarkStream = GetStreamFromByteArray(watermarkBytes);
 
-            var processedImage = new WatermarkService().AddWatermark(imageStream, watermarkStream);
+            var processedImage = new MediaProcessingService().AddWatermarkMagickImage(imageStream, watermarkStream);
 
             return File(processedImage.ToByteArray(), "image/jpeg");
         }
@@ -59,10 +59,10 @@ namespace Bai.Media.Web.Controllers
 
             if (defaultSize)
             {
-                image = new WatermarkService().ResizeImage(image);
+                image = new MediaProcessingService().ResizeImage(image);
             }
 
-            var processedImage = new WatermarkService().AddWatermark2(image, watermark);
+            var processedImage = new MediaProcessingService().AddWatermarkSystemDrawing(image, watermark);
             var processedImageBytes = ImageToByteArray(processedImage);
             return File(processedImageBytes, "image/jpeg");
         }

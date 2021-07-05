@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
-using Bai.Media.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bai.Media.Web.Controllers

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Bai.Media.Web.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
 
-namespace Bai.Media.Web.Services
+namespace Bai.Media.Web.Services.MediaPersistenceServices
 {
     public class FileSystemService : IFileSystemService
     {
@@ -13,7 +13,7 @@ namespace Bai.Media.Web.Services
             await AddFileToPath(formFile, filePath);
         }
 
-        public async Task ArchiveWwwRootFile(string wwwRootDirectoryPath, string fileName)
+        public void ArchiveWwwRootFile(string wwwRootDirectoryPath, string fileName)
         {
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, fileName);
             ArchiveFile(filePath);
