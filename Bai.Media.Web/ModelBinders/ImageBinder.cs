@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Bai.Media.Web.ModelBinders
 {
-    public class AvatarBinder : MediaBinder
+    public class ImageBinder : MediaBinder
     {
         public override Task BindModelAsync(ModelBindingContext bindingContext)
         {
@@ -16,9 +16,11 @@ namespace Bai.Media.Web.ModelBinders
                 throw new ArgumentNullException(nameof(bindingContext));
             }
 
-            bindingContext.Result = ModelBindingResult.Success(new Avatar
+            bindingContext.Result = ModelBindingResult.Success(new Image
             {
                 UserId = GetGuid(bindingContext, "UserId"),
+                PageId = GetGuid(bindingContext, "PageId"),
+                PageType = GetPageType(bindingContext),
                 FormImage = bindingContext.ActionContext.HttpContext.Request.Form.Files.FirstOrDefault()
             });
 

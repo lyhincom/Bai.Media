@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Bai.Media.Web.Abstractions.Services;
 using Microsoft.AspNetCore.Http;
 
-namespace Bai.Media.Web.Services.MediaPersistenceServices
+namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
 {
     public class FileSystemService : IFileSystemService
     {

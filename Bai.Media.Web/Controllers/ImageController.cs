@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Bai.Domain.Settings.Getters;
 using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
-using Bai.Media.Web.Services.MediaProcessingServices;
-using ImageMagick;
+using Bai.Media.Web.Abstractions.Services;
+using Bai.Media.Web.Abstractions.Services.PersistenceServices;
+using Bai.Media.Web.Enums;
+using Bai.Media.Web.ModelBinders;
+using Bai.Media.Web.Models;
+using Bai.Media.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using DrawingImage = System.Drawing.Image;
 
 namespace Bai.Media.Web.Controllers
 {
@@ -17,94 +20,67 @@ namespace Bai.Media.Web.Controllers
     public class ImageController : ControllerBase
     {
         private readonly IDomainRepository<ImageEntity, Guid> _repository;
+        private readonly IFormFileValidationService _formFileValidationService;
+        private readonly IMediaProcessingService _mediaProcessingService;
+        private readonly IPersistenceService<Image> _persistenceService;
 
-        public ImageController(IDomainRepository<ImageEntity, Guid> repository) =>
-            _repository = repository;
-
-        //[HttpPost]
-        //public virtual async Task<ActionResult> Post([FromBody] TModel entity) =>
-        //    Ok(await _repository.AddEntity(entity, true));
-
-        [HttpGet]
-        public ActionResult WatermarkImage() => GetWatermarkImage();
-
-        private ActionResult WatermarkMagicImage()
+        public ImageController(IDomainRepository<ImageEntity, Guid> repository,
+                               IFormFileValidationService formFileValidationService,
+                               IMediaProcessingService mediaProcessingService,
+                               IPersistenceService<Image> persistenceService)
         {
-            using var webClient = new WebClient();
-            string imageUrl = "https://localhost:13001/bai.media.staticfiles/predefined/images/default.jpg"; // default.jpg // calendar-application.jpg
-            string watermarkUrl = "https://localhost:13001/bai.media.staticfiles/predefined/watermarks/default.png";
-
-            var imageBytes = webClient.DownloadData(imageUrl);
-            var watermarkBytes = webClient.DownloadData(watermarkUrl);
-
-            var imageStream = GetStreamFromByteArray(imageBytes);
-            var watermarkStream = GetStreamFromByteArray(watermarkBytes);
-
-            var processedImage = new MediaProcessingService().AddWatermarkMagickImage(imageStream, watermarkStream);
-
-            return File(processedImage.ToByteArray(), "image/jpeg");
+            _repository = repository;
+            _formFileValidationService = formFileValidationService;
+            _mediaProcessingService = mediaProcessingService;
+            _persistenceService = persistenceService;
         }
 
-        private ActionResult GetWatermarkImage(bool defaultSize = true)
+        [HttpGet]
+        public ActionResult GetProcessedImage(Guid pageId, string pageType, ImageSizeEnum imageSize = ImageSizeEnum.Thumbnail)
         {
             using var webClient = new WebClient();
-            string imageUrl = "https://localhost:13001/bai.media.staticfiles/predefined/images/calendar-application.jpg";
-            string watermarkUrl = "https://localhost:13001/bai.media.staticfiles/predefined/watermarks/default.png";
+            string imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/images/calendar-application.jpg"; // ToDo: read Watermarked Image from FileSystem
+            string watermarkUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/watermarks/default.png";
 
             var imageBytes = webClient.DownloadData(imageUrl);
             var watermarkBytes = webClient.DownloadData(watermarkUrl);
 
-            var image = GetImageFromByteArray(imageBytes);
-            using var watermark = GetImageFromByteArray(watermarkBytes);
+            using var image = MediaService.GetImageFromByteArray(imageBytes);
+            using var watermark = MediaService.GetImageFromByteArray(watermarkBytes);
 
-            if (defaultSize)
+            DrawingImage resizedImage = null;
+            if (imageSize == ImageSizeEnum.Thumbnail && IsStandardImageSize(image))
             {
-                image = new MediaProcessingService().ResizeImage(image);
+                resizedImage = _mediaProcessingService.ResizeImage(image);
             }
 
-            var processedImage = new MediaProcessingService().AddWatermarkSystemDrawing(image, watermark);
-            var processedImageBytes = ImageToByteArray(processedImage);
+            var processedImage = _mediaProcessingService.AddWatermarkSystemDrawing(resizedImage, watermark);
+            var processedImageBytes = MediaService.ImageToByteArray(processedImage);
+
             return File(processedImageBytes, "image/jpeg");
         }
 
-        //private string GetMimeTypeFromFileName(string fileName)
-        //{
-        //    new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
-        //    return contentType ?? "application/octet-stream";
-        //}
-
-        private Stream GetStreamFromByteArray(byte[] byteArray)
+        [HttpPost]
+        public virtual async Task<ActionResult> Post([ModelBinder(typeof(ImageBinder))] Image model)
         {
-            var ms = new MemoryStream(byteArray, 0, byteArray.Length);
-            ms.Seek(0, SeekOrigin.Begin);
-            return ms;
+            _formFileValidationService.ValidateFormFile(model.FormImage);
+            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model);
+
+            return Ok(mediaUrl);
         }
 
-        private Image GetImageFromByteArray(byte[] byteArray)
+#region Debug
+
+        [HttpDelete]
+        public virtual async Task<ActionResult> Delete(Guid pageId, string pageType)
         {
-            var ms = new MemoryStream(byteArray, 0, byteArray.Length);
-            ms.Seek(0, SeekOrigin.Begin);
-            return Image.FromStream(ms);
+            throw new NotImplementedException();
         }
 
-        private byte[] ImageToByteArray(Image imageIn)
-        {
-            try
-            {
-                var converter = new ImageConverter();
-                return (byte[])converter.ConvertTo(imageIn, typeof(byte[]));
+#endregion
 
-                using (var ms = new MemoryStream())
-                {
-                    imageIn.Save(ms, ImageFormat.Png); // , imageIn.RawFormat
-                    return ms.ToArray();
-                }
-            }
-            catch (Exception e)
-            {
-                var x = e;
-                return null;
-            }
-        }
+        private bool IsStandardImageSize(DrawingImage image) =>
+            image.Width != ImageValidationService.ConstWidth &&
+            image.Height != ImageValidationService.ConstHeight;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,5 +18,15 @@ namespace Bai.Media.Web.Controllers
         //[HttpPost]
         //public virtual async Task<ActionResult> Post([FromBody] Logo entity) =>
         //    Ok(await _repository.AddEntity(entity, true));
+
+        #region Debug
+
+        [HttpDelete]
+        public virtual async Task<ActionResult> Delete(Guid pageId, string pageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

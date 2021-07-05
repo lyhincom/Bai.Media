@@ -16,3 +16,9 @@ https://localhost:13001/bai.media.staticfiles/predefined/watermarks/default.png
 
 https://localhost:13001/api/avatar/80372898-c35e-4c85-b53d-f037ae162ef7
 https://localhost:13001/bai.media.staticfiles/avatars/80372898-c35e-4c85-b53d-f037ae162ef7.png
+
+Bai.Media, Image:
+1. RawImage of maximum size is persisted to Database;
+2. Image files are files of size > 512KB. Image files are persisted to FileSystem with Watermark;
+3. There are two file sized for FileSystem images: Thumbnail for search and Medium for provider page;
+4. FileSystem images can be respoted from Database images with a new Watermark.

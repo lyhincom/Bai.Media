@@ -9,8 +9,8 @@ namespace Bai.Media.Web.Services
     public class ImageValidationService : IMagicImageValidationService<Image, ImageEntity>
     {
         private const string EntityName = "Image";
-        private const int ConstWidth = 942;
-        private const int ConstHeight = 531;
+        public const int ConstWidth = 942;
+        public const int ConstHeight = 531;
 
         public void ValidateImage(MagickImage image)
         {

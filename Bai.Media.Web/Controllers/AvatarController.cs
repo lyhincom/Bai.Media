@@ -31,7 +31,7 @@ namespace Bai.Media.Web.Controllers
         public virtual async Task<ActionResult> Post([ModelBinder(typeof(AvatarBinder))] Avatar model)
         {
             _formFileValidationService.ValidateFormFile(model.FormImage);
-            var mediaUrl = await _persistenceService.AddOrUpdateUserAvatar(model);
+            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model);
 
             return Ok(mediaUrl);
         }
@@ -47,5 +47,15 @@ namespace Bai.Media.Web.Controllers
 
             return File(userAvatar.ImageBytes, userAvatar.ContentType);
         }
+
+        #region Debug
+
+        [HttpDelete]
+        public virtual async Task<ActionResult> Delete(Guid pageId, string pageType)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

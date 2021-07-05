@@ -15,6 +15,7 @@ using Bai.Media.Web.Abstractions.Services.PersistenceServices;
 using Bai.Media.Web.Models;
 using Bai.Media.Web.Services;
 using Bai.Media.Web.Services.MediaPersistenceServices;
+using Bai.Media.Web.Services.MediaPersistenceServices.Base;
 using Bai.Media.Web.Services.ValidationServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -48,7 +49,7 @@ namespace Bai.Media.Web
             services.AddTransient<IDomainRepository<AvatarEntity, Guid>, DomainRepository<AvatarEntity, Guid, MediaDbContext>>();
             services.AddTransient<IDomainRepository<ImageEntity, Guid>, DomainRepository<ImageEntity, Guid, MediaDbContext>>();
             services.AddTransient<IDomainRepository<LogoEntity, Guid>, DomainRepository<LogoEntity, Guid, MediaDbContext>>();
-            services.AddTransient<IPersistenceService<Avatar>, PersistenceService>();
+            services.AddTransient<IPersistenceService<Avatar>, AvatarPersistenceService>();
 
             services.AddTransient<IFormFileValidationService, FormFileValidationService>();
             services.AddTransient<IMagicImageValidationService<Avatar, AvatarEntity>, AvatarValidationService>();
