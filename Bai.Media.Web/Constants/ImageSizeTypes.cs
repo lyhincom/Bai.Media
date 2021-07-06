@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Bai.Media.Web.Enums;
 
 namespace Bai.Media.Web.Constants
@@ -16,6 +17,19 @@ namespace Bai.Media.Web.Constants
                     return Thumbnail;
                 case ImageSizeEnum.Medium:
                     return Medium;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static Point GetImageSizeDimensions(ImageSizeEnum imageSizeEnum)
+        {
+            switch (imageSizeEnum)
+            {
+                case ImageSizeEnum.Thumbnail:
+                    return new Point(432, 243);
+                case ImageSizeEnum.Medium:
+                    return new Point(745, 419);
                 default:
                     throw new NotImplementedException();
             }

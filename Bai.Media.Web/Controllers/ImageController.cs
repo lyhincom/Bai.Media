@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Bai.Domain.Settings.Getters;
 using Bai.General.DAL.Abstractions.Repositories;
@@ -65,43 +66,11 @@ namespace Bai.Media.Web.Controllers
         public virtual async Task<ActionResult> Post([ModelBinder(typeof(ImageBinder))] Image model)
         {
             _formFileValidationService.ValidateFormFile(model.FormImage);
-            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, entity => entity.PageId == model.PageId &&
-                                                                                 entity.PageType == model.PageType, new ImageSizeEnum[] { ImageSizeEnum.Thumbnail, ImageSizeEnum.Medium });
+            Expression<Func<ImageEntity, bool>> whereExpression = entity => entity.PageId == model.PageId && entity.PageType == model.PageType;
+            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, whereExpression, new ImageSizeEnum[] { ImageSizeEnum.Thumbnail, ImageSizeEnum.Medium });
 
             return Ok(mediaUrl);
         }
-
-
-        //public ActionResult PostResize(Guid pageId, string imageType, ImageSizeEnum imageSize = ImageSizeEnum.Thumbnail)
-        //{
-        //    if (pageId == default)
-        //    {
-        //        throw new ArgumentException($"{nameof(pageId)} cannot be default Guid");
-        //    }
-
-        //    if (imageType != ImageTypes.SchoolImage && imageType != ImageTypes.ActivityImage)
-        //    {
-        //        throw new ArgumentException($"{nameof(imageType)} should be: 'SchoolImage' or 'ActivityImage'");
-        //    }
-
-        //    var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/images/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
-        //    var watermarkUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/watermarks/default.png";
-
-        //    using var image = MediaService.DownloadImageFromUrl(imageUrl);
-        //    using var watermark = MediaService.DownloadImageFromUrl(watermarkUrl);
-
-        //    DrawingImage resizedImage = null;
-        //    if (imageSize == ImageSizeEnum.Thumbnail && IsStandardImageSize(image))
-        //    {
-        //        resizedImage = _mediaProcessingService.ResizeImage(image);
-        //    }
-
-        //    var processedImage = _mediaProcessingService.AddWatermarkSystemDrawing(resizedImage, watermark);
-        //    var processedImageBytes = MediaService.ImageToByteArray(processedImage);
-
-        //    return File(processedImageBytes, "image/jpeg");
-        //}
-
 
         #region Debug
 

@@ -48,9 +48,10 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
 
             await SaveImageUrlsToDatabase(newUserAvatar, databaseUrl, defaultFileSystemUrl);
 
+            var hasDatabaseUrl = imageSizes == null;
             return new MediaUrl
             {
-                DatabaseUrl = databaseUrl,
+                DatabaseUrl = hasDatabaseUrl ? databaseUrl : null,
                 FileSystemUrl = defaultFileSystemUrl
             };
         }
@@ -69,21 +70,21 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
             return newMediaEntity;
         }
 
-        private string[] GetFileNameArray(string modelKey, TModel model, IList<ImageSizeEnum> imageSizes = null)
+        private MediaFileSystem[] GetFileNameArray(string modelKey, TModel model, IList<ImageSizeEnum> imageSizes = null)
         {
             if (imageSizes == null)
             {
                 var fileExtension = _fileSystemService.GetFileExtension(model.FormImage);
                 var fileName = MediaUrlService.GetFileName(modelKey, fileExtension);
-                return new string[] { fileName };
+                return new MediaFileSystem[] { new MediaFileSystem(fileName) };
             }
 
             return imageSizes.Select(imageSize =>
             {
                 var fileExtension = _fileSystemService.GetFileExtension(model.FormImage);
-                var result = MediaUrlService.GetFileName(modelKey, fileExtension, imageSize);
+                var fileName = MediaUrlService.GetFileName(modelKey, fileExtension, imageSize);
 
-                return result;
+                return new MediaFileSystem(fileName, imageSize);
             }).ToArray();
         }
 
@@ -104,16 +105,18 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
             return newMediaEntity;
         }
 
-        private async Task PersistToFileSystem(TModel model, TEntity entity, string[] fileNames)
+        private async Task PersistToFileSystem(TModel model, TEntity entity, MediaFileSystem[] mediaArray)
         {
             if (entity == null)
             {
-                await _fileSystemService.AddFileToWwwRoot(model.FormImage, EntityName, fileNames);
+                await _fileSystemService.AddFileToWwwRoot(model.FormImage, EntityName, mediaArray);
                 return;
             }
 
+            var fileNames = mediaArray.Select(media => media.MediaPath).ToArray();
             _fileSystemService.ArchiveWwwRootFile(EntityName, fileNames);
-            await _fileSystemService.AddFileToWwwRoot(model.FormImage, EntityName, fileNames);
+
+            await _fileSystemService.AddFileToWwwRoot(model.FormImage, EntityName, mediaArray);
         }
 
         protected abstract Guid GetModelKeyId(TModel model);

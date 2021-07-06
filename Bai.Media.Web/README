@@ -28,3 +28,5 @@ GET
 https://localhost:2001/api/image/9A286DA9-9EDE-49ED-9308-430CA2FEE0C2/SchoolImage
 https://localhost:2001/api/image/9A286DA9-9EDE-49ED-9308-430CA2FEE0C2/SchoolImage/Thumbnail
 https://localhost:2001/api/image/9A286DA9-9EDE-49ED-9308-430CA2FEE0C2/SchoolImage/Medium
+https://localhost:2001/bai.media.staticfiles/image/9a286da9-9ede-49ed-9308-430ca2fee0c2_schoolimage_medium.jpg?random=1625583332624
+https://localhost:2001/bai.media.staticfiles/image/9a286da9-9ede-49ed-9308-430ca2fee0c2_schoolimage_thumbnail.jpg?random=1625583332624

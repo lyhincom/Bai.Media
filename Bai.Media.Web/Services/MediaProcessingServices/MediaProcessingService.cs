@@ -1,53 +1,20 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
 using Bai.Media.Web.Abstractions.Services;
-using ImageMagick;
 
 namespace Bai.Media.Web.Services.MediaProcessingServices
 {
     public class MediaProcessingService : IMediaProcessingService
     {
-        public MagickImage AddWatermarkMagickImage(Stream imageStream, Stream watermarkStream)
-        {
-            throw new NotImplementedException();
-
-            using var image = new MagickImage(imageStream);
-            using var watermark = new MagickImage(watermarkStream);
-
-            try
-            {
-                var size = new MagickGeometry(100, 100);
-                size.IgnoreAspectRatio = true;
-                image.Resize(size);
-
-                image.Composite(watermark, watermark.Width, watermark.Height, CompositeOperator.Over);
-                image.Write(watermarkStream);
-            }
-            catch (Exception e)
-            {
-                // Output file write error --- out of disk space? `' @ error/jpeg.c/JPEGErrorHandler/346
-
-                // WriteBlob Failed `' @ error/png.c/MagickPNGErrorHandler/1715
-                // https://github.com/dlemstra/Magick.NET/issues/562
-                var x = e.Message;
-                throw;
-            }
-
-            return image;
-        }
-
         public Image AddWatermarkSystemDrawing(Image image, Image watermark)
         {
             using (Graphics imageGraphics = Graphics.FromImage(image))
             using (var watermarkBrush = new TextureBrush(watermark))
             {
-                int x = image.Width - 30 - watermark.Width;
-                int y = image.Height - 20 - watermark.Height;
+                var x = image.Width - 30 - watermark.Width;
+                var y = image.Height - 20 - watermark.Height;
 
-                // https://stackoverflow.com/questions/4113900/c-sharp-add-watermark-to-the-photo-by-special-way
                 watermarkBrush.TranslateTransform(x, y);
                 imageGraphics.FillRectangle(watermarkBrush, new Rectangle(new Point(x, y), new Size(watermark.Width + 1, watermark.Height)));
                 return image;
