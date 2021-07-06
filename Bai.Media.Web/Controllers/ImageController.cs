@@ -5,6 +5,7 @@ using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Abstractions.Services.PersistenceServices;
+using Bai.Media.Web.Constants;
 using Bai.Media.Web.Enums;
 using Bai.Media.Web.ModelBinders;
 using Bai.Media.Web.Models;
@@ -41,7 +42,7 @@ namespace Bai.Media.Web.Controllers
             _persistenceService = persistenceService;
         }
 
-        [HttpGet]
+        [HttpGet("{pageId}/{imageType}/{imageSize}")]
         public ActionResult GetProcessedImageFromFileSystem(Guid pageId, string imageType, ImageSizeEnum imageSize = ImageSizeEnum.Thumbnail)
         {
             if (pageId == default)
@@ -54,7 +55,7 @@ namespace Bai.Media.Web.Controllers
                 throw new ArgumentException($"{nameof(imageType)} should be: 'SchoolImage' or 'ActivityImage'");
             }
 
-            var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/predefined/images/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
+            var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
             var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
 
             return File(processedImageBytes, "image/jpeg");
@@ -64,7 +65,8 @@ namespace Bai.Media.Web.Controllers
         public virtual async Task<ActionResult> Post([ModelBinder(typeof(ImageBinder))] Image model)
         {
             _formFileValidationService.ValidateFormFile(model.FormImage);
-            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, entity => entity.PageId == model.PageId);
+            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, entity => entity.PageId == model.PageId &&
+                                                                                 entity.PageType == model.PageType, new ImageSizeEnum[] { ImageSizeEnum.Thumbnail, ImageSizeEnum.Medium });
 
             return Ok(mediaUrl);
         }

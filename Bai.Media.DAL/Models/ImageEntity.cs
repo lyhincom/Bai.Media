@@ -6,7 +6,7 @@ using Bai.Media.DAL.Abstractions.Models;
 
 namespace Bai.Media.DAL.Models
 {
-    public class ImageEntity : GuidEntity, IImage, IUserId, IPageKey, IDateTimeCreated, ISoftDelete, IImageUrls
+    public class ImageEntity : GuidEntity, IImage, IPageKey, IDateTimeCreated, ISoftDelete, IImageUrls
     {
         public string FileExtension { get; set; }
         public long FileSizeInBytes { get; set; }
@@ -14,8 +14,6 @@ namespace Bai.Media.DAL.Models
         public int Height { get; set; }
         public int Width { get; set; }
         public byte[] ImageBytes { get; set; }
-
-        public Guid UserId { get; set; }
 
         public Guid PageId { get; set; }
         public string PageType { get; set; }

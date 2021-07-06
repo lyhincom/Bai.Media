@@ -38,11 +38,12 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
         {
             var newUserAvatar = await AddOrUpdateUserMediaDatabaseAndFileSystem(model, whereExpression, imageSizes);
 
-            var modelKey = GetModelKey(model);
-            var databaseUrl = MediaUrlService.GetDatabaseUrl(modelKey, EntityName);
+            var modelKeyId = GetModelKeyId(model);
+            var modelKeyString = GetModelKeyAsString(model);
+            var databaseUrl = MediaUrlService.GetDatabaseUrl(modelKeyId, EntityName);
 
             var imageSize = (ImageSizeEnum?)(imageSizes == null ? null : ImageSizeEnum.Medium);
-            var defaultFileName = MediaUrlService.GetFileName(modelKey, newUserAvatar.FileExtension, imageSize);
+            var defaultFileName = MediaUrlService.GetFileName(modelKeyString, newUserAvatar.FileExtension, imageSize);
             var defaultFileSystemUrl = MediaUrlService.GetFileSystemUrl(EntityName, defaultFileName);
 
             await SaveImageUrlsToDatabase(newUserAvatar, databaseUrl, defaultFileSystemUrl);
@@ -56,12 +57,11 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
 
         private async Task<TEntity> AddOrUpdateUserMediaDatabaseAndFileSystem(TModel model, Expression<Func<TEntity, bool>> whereExpression, IList<ImageSizeEnum> imageSizes = null)
         {
-            var modelKey = GetModelKey(model);
+            var modelKeyString = GetModelKeyAsString(model);
             var entity = await _repository.GetEntity(whereExpression, asNoTracking: true);
             var newMediaEntity = _baseImageService.GetEntityFromFormImageAndValidate(model);
-            var entityGuidAndTypeId = GetEntityKeyAsString(entity);
-
-            var fileNames = GetFileNameArray(modelKey, model, imageSizes);
+            
+            var fileNames = GetFileNameArray(modelKeyString, model, imageSizes);
 
             newMediaEntity = await PersistToDatabase(model, entity, newMediaEntity);
             await PersistToFileSystem(model, entity, fileNames);
@@ -69,7 +69,7 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
             return newMediaEntity;
         }
 
-        private string[] GetFileNameArray(Guid modelKey, TModel model, IList<ImageSizeEnum> imageSizes = null)
+        private string[] GetFileNameArray(string modelKey, TModel model, IList<ImageSizeEnum> imageSizes = null)
         {
             if (imageSizes == null)
             {
@@ -116,8 +116,8 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
             await _fileSystemService.AddFileToWwwRoot(model.FormImage, EntityName, fileNames);
         }
 
-        protected abstract Guid GetModelKey(TModel model);
-        protected abstract string GetEntityKeyAsString(TEntity entity);
+        protected abstract Guid GetModelKeyId(TModel model);
+        protected abstract string GetModelKeyAsString(TModel model);
         protected abstract void SetKeyFromModelToEntity(TModel model, TEntity newMediaEntity);
 
         private async Task SaveImageUrlsToDatabase(TEntity newUserAvatar, string databaseUrl, string fileSystemUrl)

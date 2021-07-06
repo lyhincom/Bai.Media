@@ -17,13 +17,16 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices
 
         protected override string EntityName => "Image";
 
-        protected override Guid GetModelKey(Image model) =>
+        protected override Guid GetModelKeyId(Image model) =>
             model.PageId;
 
-        protected override string GetEntityKeyAsString(ImageEntity entity) =>
-            $"{entity.PageType}_{entity.PageId}".ToString();
+        protected override string GetModelKeyAsString(Image model) =>
+            $"{model.PageId}_{model.PageType}".ToString();
 
-        protected override void SetKeyFromModelToEntity(Image model, ImageEntity newMediaEntity) =>
+        protected override void SetKeyFromModelToEntity(Image model, ImageEntity newMediaEntity)
+        {
             newMediaEntity.PageId = model.PageId;
+            newMediaEntity.PageType = model.PageType;
+        }
     }
 }

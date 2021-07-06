@@ -56,12 +56,12 @@ namespace Bai.Media.DAL.Contexts
                 indexOptions.HasKey(image => image.Id)
                             .HasName("PK_Image_Id");
 
-                indexOptions.HasIndex(image => new { image.UserId, image.PageId, image.PageType })
+                indexOptions.HasIndex(image => new { image.PageId, image.PageType })
                             .HasDatabaseName("IX_Image_Key");
-                indexOptions.HasIndex(image => new { image.UserId, image.PageId, image.PageType,
+                indexOptions.HasIndex(image => new { image.PageId, image.PageType,
                                                      image.ImageGroupId, image.Priority })
                             .HasDatabaseName("IX_Image_ImageGroupPriority");
-                indexOptions.HasIndex(image => new { image.UserId, image.PageId, image.PageType,
+                indexOptions.HasIndex(image => new { image.PageId, image.PageType,
                                                      image.FileExtension, image.FileSizeInBytes, image.CreatedDt, image.Deleted })
                             .HasDatabaseName("IX_Image_QueryFields");
             });
@@ -69,7 +69,6 @@ namespace Bai.Media.DAL.Contexts
             {
                 propertyOptions.PropertyDefault(x => x.Id).HasDefaultValueSql("NEWID()");
                 
-                propertyOptions.PropertyDefault(x => x.UserId);
                 propertyOptions.PropertyDefault(x => x.PageId);
                 propertyOptions.PropertySizeDefault(x => x.PageType, 100);
                 propertyOptions.Property(x => x.ImageGroupId).HasColumnType("uniqueidentifier");

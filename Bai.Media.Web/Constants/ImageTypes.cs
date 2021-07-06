@@ -1,4 +1,4 @@
-﻿namespace Bai.Media.Web.Enums
+﻿namespace Bai.Media.Web.Constants
 {
     public static class ImageTypes
     {

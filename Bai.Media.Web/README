@@ -22,3 +22,9 @@ Bai.Media, Image:
 2. Image files are files of size > 512KB. Image files are persisted to FileSystem with Watermark;
 3. There are two file sized for FileSystem images: Thumbnail for search and Medium for provider page;
 4. FileSystem images can be respoted from Database images with a new Watermark.
+
+ImageController
+GET
+https://localhost:2001/api/image/9A286DA9-9EDE-49ED-9308-430CA2FEE0C2/SchoolImage
+https://localhost:2001/api/image/9A286DA9-9EDE-49ED-9308-430CA2FEE0C2/SchoolImage/Thumbnail
+https://localhost:2001/api/image/9A286DA9-9EDE-49ED-9308-430CA2FEE0C2/SchoolImage/Medium

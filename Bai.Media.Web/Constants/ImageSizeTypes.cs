@@ -1,6 +1,7 @@
 ﻿using System;
+using Bai.Media.Web.Enums;
 
-namespace Bai.Media.Web.Enums
+namespace Bai.Media.Web.Constants
 {
     public static class ImageSizeTypes
     {

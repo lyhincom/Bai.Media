@@ -18,6 +18,7 @@ using Bai.Media.Web.Services;
 using Bai.Media.Web.Services.ConverterServices;
 using Bai.Media.Web.Services.MediaPersistenceServices;
 using Bai.Media.Web.Services.MediaPersistenceServices.Base;
+using Bai.Media.Web.Services.MediaProcessingServices;
 using Bai.Media.Web.Services.ValidationServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -68,6 +69,8 @@ namespace Bai.Media.Web
             services.AddTransient<IMagicImageValidationService<Logo>, LogoValidationService>();
 
             services.AddTransient<IFileSystemService, FileSystemService>();
+
+            services.AddTransient<IMediaProcessingService, MediaProcessingService>();
             
             services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>
             {

@@ -17,11 +17,11 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices
 
         protected override string EntityName => "Avatar";
 
-        protected override Guid GetModelKey(Avatar model) =>
+        protected override Guid GetModelKeyId(Avatar model) =>
             model.UserId;
 
-        protected override string GetEntityKeyAsString(AvatarEntity entity) =>
-            entity.UserId.ToString();
+        protected override string GetModelKeyAsString(Avatar model) =>
+            model.UserId.ToString();
 
         protected override void SetKeyFromModelToEntity(Avatar model, AvatarEntity newMediaEntity) =>
             newMediaEntity.UserId = model.UserId;

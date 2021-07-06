@@ -18,7 +18,6 @@ namespace Bai.Media.Web.ModelBinders
 
             bindingContext.Result = ModelBindingResult.Success(new Image
             {
-                UserId = GetGuid(bindingContext, "UserId"),
                 PageId = GetGuid(bindingContext, "PageId"),
                 PageType = GetPageType(bindingContext),
                 FormImage = bindingContext.ActionContext.HttpContext.Request.Form.Files.FirstOrDefault()

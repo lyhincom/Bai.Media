@@ -17,11 +17,11 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices
 
         protected override string EntityName => "Logo";
 
-        protected override Guid GetModelKey(Logo model) =>
+        protected override Guid GetModelKeyId(Logo model) =>
             model.PageId;
 
-        protected override string GetEntityKeyAsString(LogoEntity entity) =>
-            entity.PageId.ToString();
+        protected override string GetModelKeyAsString(Logo model) =>
+            model.PageId.ToString();
 
         protected override void SetKeyFromModelToEntity(Logo model, LogoEntity newMediaEntity) =>
             newMediaEntity.PageId = model.PageId;
