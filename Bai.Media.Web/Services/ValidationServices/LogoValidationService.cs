@@ -1,12 +1,11 @@
 ﻿using System;
-using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Models;
 using ImageMagick;
 
 namespace Bai.Media.Web.Services
 {
-    public class LogoValidationService : IMagicImageValidationService<Logo, LogoEntity>
+    public class LogoValidationService : IMagicImageValidationService<Logo>
     {
         private const string EntityName = "Logo";
         private const int DimensionMinimum = 100;

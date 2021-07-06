@@ -14,7 +14,7 @@ namespace Bai.Media.Web.Services
             DomainUrl.Combine(DomainUrls.Client, "Bai.Media.StaticFiles", folderName, fileName).ToLower();
 
         public static string GetFileName(Guid keyId, string fileExtension, ImageSizeEnum? imageSize = null) =>
-            imageSize.HasValue ?
+            imageSize == null ?
                 $"{keyId}{fileExtension}" :
                 $"{keyId}_{ImageSizeTypes.GetImageSizePrefix(imageSize.Value)}{fileExtension}";
     }

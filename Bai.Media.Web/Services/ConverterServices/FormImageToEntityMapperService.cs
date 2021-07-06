@@ -8,16 +8,16 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace Bai.Media.Web.Services.ConverterServices
 {
-    public abstract class FormImageToEntityMapperService<TModel, TEntity> : IFormImageToEntityConverterService<TModel, TEntity>
+    public class FormImageToEntityMapperService<TModel, TEntity> : IFormImageToEntityConverterService<TModel, TEntity>
         where TModel : IFormImage
         where TEntity : GuidEntity, IImage, new()
     {
-        private readonly IMagicImageValidationService<TModel, TEntity> _mediaValidationService;
+        private readonly IMagicImageValidationService<TModel> _mediaValidationService = null;
 
-        public FormImageToEntityMapperService(IMagicImageValidationService<TModel, TEntity> mediaValidationService) =>
+        public FormImageToEntityMapperService(IMagicImageValidationService<TModel> mediaValidationService) =>
             _mediaValidationService = mediaValidationService;
 
-        public TEntity GetEntityFromFormImage(IFormImage model)
+        public TEntity GetEntityFromFormImageAndValidate(IFormImage model)
         {
             var formImage = model.FormImage;
             using var memoryStream = new MemoryStream();

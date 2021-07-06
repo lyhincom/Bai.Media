@@ -28,12 +28,12 @@ namespace Bai.Media.Web.Controllers
         private readonly IDomainRepository<ImageEntity, Guid> _repository;
         private readonly IFormFileValidationService _formFileValidationService;
         private readonly IMediaProcessingService _mediaProcessingService;
-        private readonly IPersistenceService<Image> _persistenceService;
+        private readonly IPersistenceService<Image, ImageEntity> _persistenceService;
 
         public ImageController(IDomainRepository<ImageEntity, Guid> repository,
                                IFormFileValidationService formFileValidationService,
                                IMediaProcessingService mediaProcessingService,
-                               IPersistenceService<Image> persistenceService)
+                               IPersistenceService<Image, ImageEntity> persistenceService)
         {
             _repository = repository;
             _formFileValidationService = formFileValidationService;
@@ -64,7 +64,7 @@ namespace Bai.Media.Web.Controllers
         public virtual async Task<ActionResult> Post([ModelBinder(typeof(ImageBinder))] Image model)
         {
             _formFileValidationService.ValidateFormFile(model.FormImage);
-            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model);
+            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, entity => entity.PageId == model.PageId);
 
             return Ok(mediaUrl);
         }

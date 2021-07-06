@@ -17,9 +17,6 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices
 
         protected override string EntityName => "Avatar";
 
-        protected override bool Where(AvatarEntity entity, Guid keyId) =>
-            entity.UserId == keyId;
-
         protected override Guid GetModelKey(Avatar model) =>
             model.UserId;
 

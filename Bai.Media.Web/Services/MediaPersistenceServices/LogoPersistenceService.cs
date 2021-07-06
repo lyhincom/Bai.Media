@@ -17,9 +17,6 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices
 
         protected override string EntityName => "Logo";
 
-        protected override bool Where(LogoEntity entity, Guid modelKey) =>
-            entity.PageId == modelKey;
-
         protected override Guid GetModelKey(Logo model) =>
             model.PageId;
 

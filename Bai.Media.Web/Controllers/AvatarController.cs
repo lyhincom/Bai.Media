@@ -20,11 +20,11 @@ namespace Bai.Media.Web.Controllers
     {
         private readonly IDomainRepository<AvatarEntity, Guid> _repository;
         private readonly IFormFileValidationService _formFileValidationService;
-        private readonly IPersistenceService<Avatar> _persistenceService;
+        private readonly IPersistenceService<Avatar, AvatarEntity> _persistenceService;
 
         public AvatarController(IDomainRepository<AvatarEntity, Guid> repository,
                                 IFormFileValidationService formFileValidationService,
-                                IPersistenceService<Avatar> persistenceService)
+                                IPersistenceService<Avatar, AvatarEntity> persistenceService)
         {
             _repository = repository;
             _formFileValidationService = formFileValidationService;
@@ -35,7 +35,7 @@ namespace Bai.Media.Web.Controllers
         public virtual async Task<ActionResult> Post([ModelBinder(typeof(AvatarBinder))] Avatar model)
         {
             _formFileValidationService.ValidateFormFile(model.FormImage);
-            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model);
+            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, entity => entity.UserId == model.UserId);
 
             return Ok(mediaUrl);
         }
@@ -55,7 +55,7 @@ namespace Bai.Media.Web.Controllers
         #region Debug
 
         [HttpDelete]
-        public virtual async Task<ActionResult> Delete(Guid pageId, string pageType)
+        public virtual async Task<ActionResult> Delete(Guid userId)
         {
             throw new NotImplementedException();
         }

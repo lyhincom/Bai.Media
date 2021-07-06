@@ -1,12 +1,11 @@
 ﻿using System;
-using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Models;
 using ImageMagick;
 
 namespace Bai.Media.Web.Services
 {
-    public class ImageValidationService : IMagicImageValidationService<Image, ImageEntity>
+    public class ImageValidationService : IMagicImageValidationService<Image>
     {
         private const string EntityName = "Image";
         public const int ConstWidth = 942;

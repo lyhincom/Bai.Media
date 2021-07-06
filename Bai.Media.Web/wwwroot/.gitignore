@@ -1,0 +1,12 @@
+# Bai.By microservice root .gitignore
+# .gitignore configuration is described in Windows Explorer name order
+.git/
+.vs/
+Logs/
+bin/
+obj/
+packages/
+Avatar/
+Image/
+Logo/
+*.user

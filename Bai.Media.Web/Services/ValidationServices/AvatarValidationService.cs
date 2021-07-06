@@ -1,12 +1,11 @@
 ﻿using System;
-using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Models;
 using ImageMagick;
 
 namespace Bai.Media.Web.Services.ValidationServices
 {
-    public class AvatarValidationService : IMagicImageValidationService<Avatar, AvatarEntity>
+    public class AvatarValidationService : IMagicImageValidationService<Avatar>
     {
         private const string EntityName = "Avatar";
         private const int DimensionMinimum = 64;
