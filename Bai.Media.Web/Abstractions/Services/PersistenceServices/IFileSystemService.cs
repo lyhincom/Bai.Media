@@ -8,7 +8,7 @@ namespace Bai.Media.Web.Abstractions.Services
     public interface IFileSystemService
     {
         Task AddFileToWwwRoot(IFormFile formFile, string wwwRootDirectoryPath, params MediaFileSystem[] fileNames);
-        void ArchiveWwwRootFile(string wwwRootDirectoryPath, params string[] fileName);
+        void ArchiveWwwRootFile(string wwwRootDirectoryPath, string[] fileNamesNoExtension, string fileExtension);
         string GetFileExtension(IFormFile filePath);
         void DeleteWwwRootMedia(Guid keyId, string wwwRootDirectoryPath);
     }

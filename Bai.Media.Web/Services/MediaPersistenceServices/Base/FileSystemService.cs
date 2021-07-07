@@ -38,11 +38,11 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
             }
         }
 
-        public void ArchiveWwwRootFile(string wwwRootDirectoryPath, params string[] fileNames)
+        public void ArchiveWwwRootFile(string wwwRootDirectoryPath, string[] fileNamesNoExtension, string entityFileExtension)
         {
-            foreach (var fileName in fileNames)
+            foreach (var fileNameNoExtension in fileNamesNoExtension)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, fileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, $"{fileNameNoExtension}{entityFileExtension}");
                 ArchiveFile(filePath);
             }
         }

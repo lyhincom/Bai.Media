@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -128,8 +129,8 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
                 return;
             }
 
-            var fileNames = mediaArray.Select(media => media.MediaPath).ToArray();
-            _fileSystemService.ArchiveWwwRootFile(EntityName, fileNames);
+            var fileNames = mediaArray.Select(media => Path.GetFileNameWithoutExtension(media.MediaPath)).ToArray();
+            _fileSystemService.ArchiveWwwRootFile(EntityName, fileNames, entity.FileExtension);
 
             await _fileSystemService.AddFileToWwwRoot(model.FormImage, EntityName, mediaArray);
         }
