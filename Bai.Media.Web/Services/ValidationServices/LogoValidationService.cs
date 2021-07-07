@@ -1,5 +1,6 @@
 ﻿using System;
 using Bai.Media.Web.Abstractions.Services;
+using Bai.Media.Web.Exceptions.Base;
 using Bai.Media.Web.Models;
 using ImageMagick;
 
@@ -21,12 +22,12 @@ namespace Bai.Media.Web.Services
         {
             if (pixelSize < DimensionMinimum)
             {
-                throw new Exception(string.Format("Uploaded {0} {1} is too small, cannot be less than {2}px. Current value is {3}px.", EntityName, dimensionName, DimensionMinimum, pixelSize));
+                throw new MediaValidationException(string.Format("Uploaded {0} {1} is too small, cannot be less than {2}px. Current value is {3}px.", EntityName, dimensionName, DimensionMinimum, pixelSize));
             }
 
             if (pixelSize > DimensionMaximum)
             {
-                throw new Exception(string.Format("Uploaded {0} {1} is too large, cannot be greater than {2}px. Current value is {3}px.", EntityName, dimensionName, DimensionMaximum, pixelSize));
+                throw new MediaValidationException(string.Format("Uploaded {0} {1} is too large, cannot be greater than {2}px. Current value is {3}px.", EntityName, dimensionName, DimensionMaximum, pixelSize));
             }
         }
     }

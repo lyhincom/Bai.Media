@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
@@ -16,6 +17,9 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices
         }
 
         protected override string EntityName => "Image";
+
+        public override async Task DeleteMedia(Guid keyId) =>
+            await DeleteMedia(keyId, entity => entity.PageId == keyId);
 
         protected override Guid GetModelKeyId(Image model) =>
             model.PageId;

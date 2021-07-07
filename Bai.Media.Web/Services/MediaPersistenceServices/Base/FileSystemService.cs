@@ -1,6 +1,8 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Bai.Domain.Settings.Getters;
 using Bai.Media.Web.Abstractions.Services;
@@ -43,6 +45,15 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath, fileName);
                 ArchiveFile(filePath);
             }
+        }
+
+        public void DeleteWwwRootMedia(Guid keyId, string wwwRootDirectoryPath)
+        {
+            var fileDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", wwwRootDirectoryPath);
+            var directoryToSearch = new DirectoryInfo(fileDirectory);
+            var filesToDelete = directoryToSearch.GetFiles($"{keyId}*.*").ToList();
+            
+            filesToDelete.ForEach(file => file.Delete());
         }
 
         public string GetFileExtension(IFormFile filePath) =>

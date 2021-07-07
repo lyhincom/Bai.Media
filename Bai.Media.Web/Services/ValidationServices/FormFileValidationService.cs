@@ -1,5 +1,6 @@
 ﻿using System;
 using Bai.Media.Web.Abstractions.Services;
+using Bai.Media.Web.Exceptions.Base;
 using Microsoft.AspNetCore.Http;
 
 namespace Bai.Media.Web.Services.ValidationServices
@@ -22,7 +23,7 @@ namespace Bai.Media.Web.Services.ValidationServices
                 formImage.ContentType == "image/jpeg" ||
                 formImage.ContentType == "image/gif")
             {
-                throw new Exception("Allowed image ContentTypes: png, jpg, jpeg, gif.");
+                throw new MediaValidationException("Allowed image ContentTypes: png, jpg, jpeg, gif.");
             }
         }
 
@@ -30,12 +31,12 @@ namespace Bai.Media.Web.Services.ValidationServices
         {
             if (formImage.Length < ImageMinimumBytesSize)
             {
-                throw new Exception($"Image byte size is too small to upload. Current byte size is {formImage.Length} is less than accepted minimum {ImageMinimumBytesSize}.");
+                throw new MediaValidationException($"Image byte size is too small to upload. Current byte size is {formImage.Length} is less than accepted minimum {ImageMinimumBytesSize}.");
             }
 
             if (formImage.Length > ImageMaximumBytesSize)
             {
-                throw new Exception($"Image byte size is too large to upload. Current byte size is {formImage.Length} is greater than accepted maximum {ImageMaximumBytesSize}.");
+                throw new MediaValidationException($"Image byte size is too large to upload. Current byte size is {formImage.Length} is greater than accepted maximum {ImageMaximumBytesSize}.");
             }
         }
     }

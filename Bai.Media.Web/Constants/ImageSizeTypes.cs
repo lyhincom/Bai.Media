@@ -6,8 +6,8 @@ namespace Bai.Media.Web.Constants
 {
     public static class ImageSizeTypes
     {
-        public const string Thumbnail = "thumbnail";
-        public const string Medium = "medium";
+        public const string Thumbnail = "s"; // "thumbnail"
+        public const string Medium = "m"; // "medium"
 
         public static string GetImageSizePrefix(ImageSizeEnum imageSizeEnum)
         {

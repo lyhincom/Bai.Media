@@ -4,6 +4,7 @@ using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Abstractions.Services.PersistenceServices;
+using Bai.Media.Web.Exceptions.Base;
 using Bai.Media.Web.ModelBinders;
 using Bai.Media.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -31,15 +32,6 @@ namespace Bai.Media.Web.Controllers
             _persistenceService = persistenceService;
         }
 
-        [HttpPost]
-        public virtual async Task<ActionResult> Post([ModelBinder(typeof(AvatarBinder))] Avatar model)
-        {
-            _formFileValidationService.ValidateFormFile(model.FormImage);
-            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, entity => entity.UserId == model.UserId);
-
-            return Ok(mediaUrl);
-        }
-
         [HttpGet("{userId}")]
         public async Task<ActionResult> GetAvatarFromDatabase(Guid userId)
         {
@@ -52,14 +44,31 @@ namespace Bai.Media.Web.Controllers
             return File(userAvatar.ImageBytes, userAvatar.ContentType);
         }
 
+        [HttpPost]
+        public virtual async Task<ActionResult> Post([ModelBinder(typeof(AvatarBinder))] Avatar model)
+        {
+            try
+            {
+                _formFileValidationService.ValidateFormFile(model.FormImage);
+                var mediaUrl = await _persistenceService.AddOrUpdateMedia(model, entity => entity.UserId == model.UserId);
+
+                return Ok(mediaUrl);
+            }
+            catch (MediaValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         #region Debug
 
         [HttpDelete]
         public virtual async Task<ActionResult> Delete(Guid userId)
         {
-            throw new NotImplementedException();
+            await _persistenceService.DeleteMedia(userId);
+            return Ok();
         }
-
+            
         #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
@@ -14,6 +15,9 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices
                                       IFileSystemService fileSystemService) : base(repository, baseImageService, fileSystemService)
         {
         }
+
+        public override async Task DeleteMedia(Guid keyId) =>
+            await DeleteMedia(keyId, entity => entity.PageId == keyId);
 
         protected override string EntityName => "Logo";
 

@@ -14,6 +14,7 @@ namespace Bai.Media.Web.Abstractions.Services.PersistenceServices
         where TModel : IFormImage
         where TEntity : GuidEntity, IImage, IImageUrls, ISoftDelete, new()
     {
-        Task<MediaUrl> AddOrUpdateUserMedia(TModel model, Expression<Func<TEntity, bool>> whereExpression, ImageSizeEnum[] imageSizes = null);
+        Task<MediaUrl> AddOrUpdateMedia(TModel model, Expression<Func<TEntity, bool>> whereExpression, ImageSizeEnum[] imageSizes = null);
+        Task DeleteMedia(Guid keyId);
     }
 }

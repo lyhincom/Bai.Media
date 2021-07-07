@@ -2,12 +2,12 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Bai.Domain.Settings.Getters;
-using Bai.General.DAL.Abstractions.Repositories;
 using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Abstractions.Services.PersistenceServices;
 using Bai.Media.Web.Constants;
 using Bai.Media.Web.Enums;
+using Bai.Media.Web.Exceptions.Base;
 using Bai.Media.Web.ModelBinders;
 using Bai.Media.Web.Models;
 using Bai.Media.Web.Services;
@@ -27,19 +27,13 @@ namespace Bai.Media.Web.Controllers
     [Route("api/[controller]")]
     public class ImageController : ControllerBase
     {
-        private readonly IDomainRepository<ImageEntity, Guid> _repository;
         private readonly IFormFileValidationService _formFileValidationService;
-        private readonly IMediaProcessingService _mediaProcessingService;
         private readonly IPersistenceService<Image, ImageEntity> _persistenceService;
 
-        public ImageController(IDomainRepository<ImageEntity, Guid> repository,
-                               IFormFileValidationService formFileValidationService,
-                               IMediaProcessingService mediaProcessingService,
+        public ImageController(IFormFileValidationService formFileValidationService,
                                IPersistenceService<Image, ImageEntity> persistenceService)
         {
-            _repository = repository;
             _formFileValidationService = formFileValidationService;
-            _mediaProcessingService = mediaProcessingService;
             _persistenceService = persistenceService;
         }
 
@@ -53,7 +47,7 @@ namespace Bai.Media.Web.Controllers
 
             if (imageType != ImageTypes.SchoolImage && imageType != ImageTypes.ActivityImage)
             {
-                throw new ArgumentException($"{nameof(imageType)} should be: 'SchoolImage' or 'ActivityImage'");
+                throw new ArgumentException($"{nameof(imageType)} should be: 'School' or 'Activity'");
             }
 
             var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
@@ -65,19 +59,27 @@ namespace Bai.Media.Web.Controllers
         [HttpPost]
         public virtual async Task<ActionResult> Post([ModelBinder(typeof(ImageBinder))] Image model)
         {
-            _formFileValidationService.ValidateFormFile(model.FormImage);
-            Expression<Func<ImageEntity, bool>> whereExpression = entity => entity.PageId == model.PageId && entity.PageType == model.PageType;
-            var mediaUrl = await _persistenceService.AddOrUpdateUserMedia(model, whereExpression, new ImageSizeEnum[] { ImageSizeEnum.Thumbnail, ImageSizeEnum.Medium });
+            try
+            {
+                _formFileValidationService.ValidateFormFile(model.FormImage);
+                Expression<Func<ImageEntity, bool>> whereExpression = entity => entity.PageId == model.PageId && entity.PageType == model.PageType;
+                var mediaUrl = await _persistenceService.AddOrUpdateMedia(model, whereExpression, new ImageSizeEnum[] { ImageSizeEnum.Thumbnail, ImageSizeEnum.Medium });
 
-            return Ok(mediaUrl);
+                return Ok(mediaUrl);
+            }
+            catch (MediaValidationException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        #region Debug
+#region Debug
 
         [HttpDelete]
-        public virtual async Task<ActionResult> Delete(Guid pageId, string pageType)
+        public virtual async Task<ActionResult> Delete(Guid pageId)
         {
-            throw new NotImplementedException();
+            await _persistenceService.DeleteMedia(pageId);
+            return Ok();
         }
 
 #endregion
