@@ -38,7 +38,7 @@ namespace Bai.Media.Web.Controllers
             var userAvatar = await _repository.GetEntity(avatar => avatar.UserId == userId && avatar.Deleted == false);
             if (userAvatar == null)
             {
-                return Ok(string.Empty);
+                return NotFound();
             }
 
             return File(userAvatar.ImageBytes, userAvatar.ContentType);

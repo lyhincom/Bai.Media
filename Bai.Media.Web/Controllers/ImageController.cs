@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Net;
 using System.Threading.Tasks;
 using Bai.Domain.Settings.Getters;
 using Bai.Media.DAL.Models;
@@ -42,18 +43,24 @@ namespace Bai.Media.Web.Controllers
         {
             if (pageId == default)
             {
-                throw new ArgumentException($"{nameof(pageId)} cannot be default Guid");
+                return BadRequest($"{nameof(pageId)} cannot be default Guid");
             }
 
             if (imageType != ImageTypes.SchoolImage && imageType != ImageTypes.ActivityImage)
             {
-                throw new ArgumentException($"{nameof(imageType)} should be: 'School' or 'Activity'");
+                return BadRequest($"{nameof(imageType)} should be: 'School' or 'Activity'");
             }
 
-            var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
-            var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
-
-            return File(processedImageBytes, "image/jpeg");
+            try
+            {
+                var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
+                var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
+                return File(processedImageBytes, "image/jpeg");
+            }
+            catch (WebException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]

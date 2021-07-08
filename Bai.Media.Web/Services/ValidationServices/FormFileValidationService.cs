@@ -23,8 +23,10 @@ namespace Bai.Media.Web.Services.ValidationServices
                 formImage.ContentType == "image/jpeg" ||
                 formImage.ContentType == "image/gif")
             {
-                throw new MediaValidationException("Allowed image ContentTypes: png, jpg, jpeg, gif.");
+                return;
             }
+
+            throw new MediaValidationException("Allowed image ContentTypes: png, jpg, jpeg, gif.");
         }
 
         private void ValidateFormFileByteSize(IFormFile formImage)
