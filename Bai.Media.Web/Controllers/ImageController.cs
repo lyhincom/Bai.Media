@@ -80,7 +80,7 @@ namespace Bai.Media.Web.Controllers
             }
         }
 
-#region Debug
+        #region Debug
 
         [HttpDelete]
         public virtual async Task<ActionResult> Delete(Guid pageId)
@@ -89,7 +89,7 @@ namespace Bai.Media.Web.Controllers
             return Ok();
         }
 
-#endregion
+        #endregion
 
         private bool IsStandardImageSize(DrawingImage image) =>
             image.Width != ImageValidationService.ConstWidth &&
