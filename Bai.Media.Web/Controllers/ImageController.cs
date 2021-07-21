@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using Bai.Domain.Settings.Getters;
+using Bai.Media.DAL.Contexts;
 using Bai.Media.DAL.Models;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Abstractions.Services.PersistenceServices;
@@ -30,12 +32,15 @@ namespace Bai.Media.Web.Controllers
     {
         private readonly IFormFileValidationService _formFileValidationService;
         private readonly IPersistenceService<Image, ImageEntity> _persistenceService;
+        private readonly MediaDbContext _mediaDbContext;
 
         public ImageController(IFormFileValidationService formFileValidationService,
-                               IPersistenceService<Image, ImageEntity> persistenceService)
+                               IPersistenceService<Image, ImageEntity> persistenceService,
+                               MediaDbContext mediaDbContext)
         {
             _formFileValidationService = formFileValidationService;
             _persistenceService = persistenceService;
+            _mediaDbContext = mediaDbContext;
         }
 
         [HttpGet("{pageId}/{imageType}/{imageSize}")]
@@ -46,9 +51,9 @@ namespace Bai.Media.Web.Controllers
                 return BadRequest($"{nameof(pageId)} cannot be default Guid");
             }
 
-            if (imageType != ImageTypes.SchoolImage && imageType != ImageTypes.ActivityImage)
+            if (!IsAllowedImageType(imageType))
             {
-                return BadRequest($"{nameof(imageType)} should be: 'School' or 'Activity'");
+                return BadRequest($"{nameof(imageType)} should be: 'School' or 'Location'");
             }
 
             try
@@ -63,11 +68,34 @@ namespace Bai.Media.Web.Controllers
             }
         }
 
+        [HttpGet("exists/{pageId}/{imageType}")]
+        public ActionResult ImageExistsInDatabase(Guid pageId, string imageType)
+        {
+            if (pageId == default)
+            {
+                return BadRequest($"{nameof(pageId)} cannot be default Guid");
+            }
+
+            if (!IsAllowedImageType(imageType))
+            {
+                return BadRequest($"{nameof(imageType)} should be: 'School' or 'Location'");
+            }
+
+            var mediaExists = _mediaDbContext.Images.Any(img => img.PageId == pageId && img.PageType == imageType);
+
+            return Ok(mediaExists);
+        }
+
         [HttpPost]
         public virtual async Task<ActionResult> Post([ModelBinder(typeof(ImageBinder))] Image model)
         {
             try
             {
+                if (!IsAllowedImageType(model?.PageType))
+                {
+                    return BadRequest($"PageType {model.PageType} is not allowed");
+                }
+
                 _formFileValidationService.ValidateFormFile(model.FormImage);
                 Expression<Func<ImageEntity, bool>> whereExpression = entity => entity.PageId == model.PageId && entity.PageType == model.PageType;
                 var mediaUrl = await _persistenceService.AddOrUpdateMedia(model, whereExpression, new ImageSizeEnum[] { ImageSizeEnum.Thumbnail, ImageSizeEnum.Medium });
@@ -90,6 +118,9 @@ namespace Bai.Media.Web.Controllers
         }
 
         #endregion
+
+        private bool IsAllowedImageType(string imageType) =>
+            imageType == ImageTypes.SchoolImage || imageType == ImageTypes.LocationImage;
 
         private bool IsStandardImageSize(DrawingImage image) =>
             image.Width != ImageValidationService.ConstWidth &&

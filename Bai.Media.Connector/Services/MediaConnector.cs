@@ -33,6 +33,27 @@ namespace Bai.Media.Connector.Services
             return new Validation<MediaUrl>(message);
         }
 
+        public async Task<bool> ImageExists(Guid imageId, string imageType)
+        {
+            try
+            {
+                using var httpClient = new HttpClient();
+                var response = await httpClient.GetAsync($"{DomainUrls.Client}/api/image/exists/{imageId}/{imageType}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var contentStream = await response.Content.ReadAsStringAsync();
+                    var result = JsonSerializer.Deserialize<bool>(contentStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return result;
+                }
+            }
+            catch (Exception)
+            {
+                // Ignore exception
+            }
+
+            return false;
+        }
+
         public async Task<bool> TryDelete(Guid mediaId, string mediaType, string imageType = null)
         {
             try

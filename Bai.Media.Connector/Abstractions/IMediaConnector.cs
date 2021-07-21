@@ -10,6 +10,7 @@ namespace Bai.Media.Connector.Abstractions
     public interface IMediaConnector
     {
         Task<Validation<MediaUrl>> PostMedia(IFormFile formImage, string entityName, IDictionary<string, string> keyValues);
+        Task<bool> ImageExists(Guid imageId, string imageType);
         Task<bool> TryDelete(Guid mediaId, string mediaType, string imageType = null);
         Task Delete(Guid mediaId, string mediaType, string imageType = null);
     }

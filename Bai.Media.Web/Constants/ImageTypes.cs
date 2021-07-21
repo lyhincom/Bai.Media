@@ -3,6 +3,6 @@
     public static class ImageTypes
     {
         public const string SchoolImage = "School";
-        public const string ActivityImage = "Activity";
+        public const string LocationImage = "Location";
     }
 }
