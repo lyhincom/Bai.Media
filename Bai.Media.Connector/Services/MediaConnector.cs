@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Bai.Domain.Settings.Getters;
@@ -14,11 +15,21 @@ namespace Bai.Media.Connector.Services
 {
     public class MediaConnector : IMediaConnector
     {
+        public async Task<Validation<MediaUrl>> PostImage(Image image)
+        {
+            return await PostMedia(image.FormImage, "Image", new Dictionary<string, string>
+            {
+                { "PageId", image.PageId.ToString() },
+                { "PageType", image.PageType }
+            });
+        }
+
         public async Task<Validation<MediaUrl>> PostMedia(IFormFile formImage, string entityName, IDictionary<string, string> keyValues)
         {
             using var httpClient = new HttpClient();
             var multipartContent = new MultipartFormDataContent();
             keyValues.ToList().ForEach(pair => multipartContent.Add(new StringContent(pair.Value), pair.Key));
+
             multipartContent.Add(new StreamContent(formImage.OpenReadStream()), "Attachment", formImage.FileName);
 
             var response = await httpClient.PostAsync($"{DomainUrls.Client}/api/{entityName}", multipartContent);

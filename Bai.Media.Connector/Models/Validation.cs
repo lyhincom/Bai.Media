@@ -10,5 +10,6 @@
 
         public TModel Model { get; set; }
         public string Message { get; set; }
+        public bool IsSuccess => Message == null;
     }
 }

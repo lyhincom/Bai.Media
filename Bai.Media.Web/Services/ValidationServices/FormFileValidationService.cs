@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Bai.Media.Web.Abstractions.Services;
 using Bai.Media.Web.Exceptions.Base;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,10 @@ namespace Bai.Media.Web.Services.ValidationServices
 
         private void ValidateFormFileFileExtension(IFormFile formImage)
         {
-            if (formImage.ContentType == "image/png" ||
+            if (Path.GetExtension(formImage.FileName) == ".png" || // Note: GetExtension works when File is HTTP Post from Server and ContentType is missing
+                Path.GetExtension(formImage.FileName) == ".jpg" ||
+                Path.GetExtension(formImage.FileName) == ".jpeg" ||
+                formImage.ContentType == "image/png" ||
                 formImage.ContentType == "image/jpg" ||
                 formImage.ContentType == "image/jpeg" ||
                 formImage.ContentType == "image/gif")
