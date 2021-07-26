@@ -120,7 +120,8 @@ namespace Bai.Media.Web.Controllers
         #endregion
 
         private bool IsAllowedImageType(string imageType) =>
-            imageType == ImageTypes.SchoolImage || imageType == ImageTypes.LocationImage;
+            imageType.ToLower() == ImageTypes.SchoolImage.ToLower() ||
+            imageType.ToLower() == ImageTypes.LocationImage.ToLower();
 
         private bool IsStandardImageSize(DrawingImage image) =>
             image.Width != ImageValidationService.ConstWidth &&
