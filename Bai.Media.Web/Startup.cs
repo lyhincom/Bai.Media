@@ -71,8 +71,9 @@ namespace Bai.Media.Web
             services.AddTransient<IFileSystemService, FileSystemService>();
 
             services.AddTransient<IMediaProcessingService, MediaProcessingService>();
-            
-            services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sql =>
+
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(connectionString, sql =>
             {
                 sql.MigrationsAssembly("Bai.Media.Migrations");
                 sql.MigrationsHistoryTable("__EFMigrationsHistory", "dbo");

@@ -26,6 +26,16 @@
     <ProjectReference Include="..\Bai.Media.DAL\Bai.Media.DAL.csproj" />
     <ProjectReference Include="..\Bai.Media.Migrations\Bai.Media.Migrations.csproj" />
   </ItemGroup>
+  
+  <!-- App Settings -->
+  <ItemGroup>
+    <Content Remove="appsettings.json" />
+    <Content Remove="appsettings.*.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
+    <Content Include="appsettings.$(DOTNET_ENVIRONMENT).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\Avatar\" />

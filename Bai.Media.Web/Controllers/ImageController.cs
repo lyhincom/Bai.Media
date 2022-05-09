@@ -58,6 +58,12 @@ namespace Bai.Media.Web.Controllers
 
             try
             {
+                var mediaExists = _mediaDbContext.Images.Any(img => img.PageId == pageId && img.PageType == imageType);
+                if (!mediaExists)
+                {
+                    return NoContent();
+                }
+
                 var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
                 var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
                 return File(processedImageBytes, "image/jpeg");
