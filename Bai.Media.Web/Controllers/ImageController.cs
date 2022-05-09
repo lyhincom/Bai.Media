@@ -58,6 +58,7 @@ namespace Bai.Media.Web.Controllers
 
             try
             {
+                // Do not show file system cache when row not exists
                 var mediaExists = _mediaDbContext.Images.Any(img => img.PageId == pageId && img.PageType == imageType);
                 if (!mediaExists)
                 {

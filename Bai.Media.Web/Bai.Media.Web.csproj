@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>d09d71df-7d8e-4d20-bc78-9f85f477bc87</UserSecretsId>
+    <Authors>Anton Lyhin</Authors>
+    <Company>lyhin.com</Company>
+    <Product>Bai.By</Product>
   </PropertyGroup>
 
   <ItemGroup>

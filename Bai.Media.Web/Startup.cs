@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Bai.Domain.Settings;
 using Bai.Domain.Settings.Getters;
 using Bai.General.ApplicationBuilder;
@@ -72,6 +73,7 @@ namespace Bai.Media.Web
 
             services.AddTransient<IMediaProcessingService, MediaProcessingService>();
 
+            Debug.WriteLine(Environment.EnvironmentName);
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(connectionString, sql =>
             {
