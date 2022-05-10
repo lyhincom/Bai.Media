@@ -8,7 +8,7 @@ using Bai.General.DAL.Abstractions.Repositories;
 using Bai.General.DAL.Repositories;
 using Bai.General.Environments;
 using Bai.General.Environments.Enums;
-using Bai.General.JwtToken;
+//using Bai.General.JwtToken;
 using Bai.General.Swagger;
 using Bai.Media.DAL.Contexts;
 using Bai.Media.DAL.Models;
@@ -45,7 +45,7 @@ namespace Bai.Media.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDomain(Environment.EnvironmentName);
-            services.AddApiScopeAuth(DomainUrls.IdentityServer, DomainClientIds.Media);
+            //services.AddApiScopeAuth(DomainUrls.IdentityServer, DomainClientIds.Media);
             services.AddDomainSwaggerGen(DomainClientIds.Media);
 
             services.AddControllers();
@@ -86,7 +86,7 @@ namespace Bai.Media.Web
         {
             app.UseDomainDeveloperExceptionPage(env);
             app.UseDomainHsts();
-            if (DomainEnvironment.Parse(env.EnvironmentName) == EnvironmentEnum.Local)
+            //if (DomainEnvironment.Parse(env.EnvironmentName) == EnvironmentEnum.Local)
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bai.Media.Web v1"));
