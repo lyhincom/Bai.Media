@@ -37,17 +37,11 @@
     <Content Remove="appsettings.*.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Controllers\AvatarController.cs" />
-    <Compile Remove="Controllers\ImageController.cs" />
-    <Compile Remove="Controllers\LogoController.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
     <Content Include="appsettings.$(DOTNET_ENVIRONMENT).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="wwwroot\Avatar\" />
     <Folder Include="wwwroot\Image\" />
     <Folder Include="wwwroot\Logo\" />
