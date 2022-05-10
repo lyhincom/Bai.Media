@@ -43,8 +43,8 @@ namespace Bai.Media.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDomain(Environment.EnvironmentName);
-            //services.AddApiScopeAuth(DomainUrls.IdentityServer, DomainClientIds.Media);
+            //services.AddDomain(Environment.EnvironmentName);
+            ////services.AddApiScopeAuth(DomainUrls.IdentityServer, DomainClientIds.Media);
             services.AddDomainSwaggerGen(DomainClientIds.Media);
 
             services.AddControllers();
@@ -73,7 +73,7 @@ namespace Bai.Media.Web
             services.AddTransient<IMediaProcessingService, MediaProcessingService>();
 
             Debug.WriteLine(Environment.EnvironmentName);
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = "Data Source=w11.hoster.by;Initial Catalog=lyhincom_media_qa;User ID=lyhincom_media_qa;Password=!lxb8QEbXpA=KCZhU+h:n5^q8/e/De"; // Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<MediaDbContext>(options => options.UseSqlServer(connectionString, sql =>
             {
                 sql.MigrationsAssembly("Bai.Media.Migrations");
@@ -87,8 +87,8 @@ namespace Bai.Media.Web
         {
             logger.Warning($"Bai.Media environment {env.EnvironmentName}...");
 
-            app.UseDomainDeveloperExceptionPage(env);
-            app.UseDomainHsts();
+            //app.UseDomainDeveloperExceptionPage(env);
+            //app.UseDomainHsts();
             //if (DomainEnvironment.Parse(env.EnvironmentName) == EnvironmentEnum.Local)
             //{
                 app.UseSwagger();
