@@ -48,4 +48,16 @@
     <Folder Include="wwwroot\Predefined\Watermarks\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\Avatar\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Image\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Logo\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
