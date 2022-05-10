@@ -26,6 +26,7 @@
     <ProjectReference Include="..\..\Bai.General\Bai.General.API\Bai.General.API.csproj" />
     <ProjectReference Include="..\..\Bai.General\Bai.General.ApplicationBuilder\Bai.General.ApplicationBuilder.csproj" />
     <ProjectReference Include="..\..\Bai.General\Bai.General.Swagger\Bai.General.Swagger.csproj" />
+    <ProjectReference Include="..\..\Bai.General\Standard\Bai.General.Logs.Std\Bai.General.Logs.Std.csproj" />
     <ProjectReference Include="..\Bai.Media.DAL\Bai.Media.DAL.csproj" />
     <ProjectReference Include="..\Bai.Media.Migrations\Bai.Media.Migrations.csproj" />
   </ItemGroup>

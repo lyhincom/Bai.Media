@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.General.API", "..\Bai.G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.Media.Connector", "Bai.Media.Connector\Bai.Media.Connector.csproj", "{F3C2AB0D-2EC0-4517-9BB0-8FE217F307E9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.General.Logs.Std", "..\Bai.General\Standard\Bai.General.Logs.Std\Bai.General.Logs.Std.csproj", "{B916EABD-3166-44D9-803D-D476EE99F2CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,12 @@ Global
 		{F3C2AB0D-2EC0-4517-9BB0-8FE217F307E9}.Release_Angular|Any CPU.Build.0 = Release|Any CPU
 		{F3C2AB0D-2EC0-4517-9BB0-8FE217F307E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3C2AB0D-2EC0-4517-9BB0-8FE217F307E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Release_Angular|Any CPU.ActiveCfg = Release|Any CPU
+		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Release_Angular|Any CPU.Build.0 = Release|Any CPU
+		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +131,7 @@ Global
 		{3E8307C0-0073-47EB-B0C5-E0F7477E0F39} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
 		{A90BE472-2112-4CC2-B648-A1F2313C7D16} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
 		{8C88C333-754F-4958-9955-2BDC75A1CB86} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
+		{B916EABD-3166-44D9-803D-D476EE99F2CA} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE36A636-7DC5-49B4-83F7-B7FF09069E11}
