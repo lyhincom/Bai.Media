@@ -69,7 +69,7 @@ namespace Bai.Media.Web.Controllers
                 var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
                 return File(processedImageBytes, "image/jpeg");
             }
-            catch (WebException)
+            catch (WebException e)
             {
                 return NotFound();
             }

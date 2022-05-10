@@ -40,10 +40,18 @@ namespace Bai.Media.Web
 
         private IWebHostEnvironment Environment { get; set; }
         private IConfiguration Configuration { get; }
-
+        private static string Message;
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDomain(Environment.EnvironmentName);
+            try
+            {
+                services.AddDomain(Environment?.EnvironmentName);
+            }
+            catch (Exception e)
+            {
+                Message = e.Message;
+            }
+
             ////services.AddApiScopeAuth(DomainUrls.IdentityServer, DomainClientIds.Media);
             services.AddDomainSwaggerGen(DomainClientIds.Media);
 
@@ -104,7 +112,8 @@ namespace Bai.Media.Web
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Good World!");
+                    var message = Message == null ? string.Empty : $" {Message}";
+                    await context.Response.WriteAsync($"Good World{message}!");
                 });
             });
 
