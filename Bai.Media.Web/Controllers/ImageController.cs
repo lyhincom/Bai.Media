@@ -16,6 +16,7 @@ using Bai.Media.Web.Models;
 using Bai.Media.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using DrawingImage = System.Drawing.Image;
+using Serilog;
 
 namespace Bai.Media.Web.Controllers
 {
@@ -33,14 +34,17 @@ namespace Bai.Media.Web.Controllers
         private readonly IFormFileValidationService _formFileValidationService;
         private readonly IPersistenceService<Image, ImageEntity> _persistenceService;
         private readonly MediaDbContext _mediaDbContext;
+        private readonly ILogger _logger;
 
         public ImageController(IFormFileValidationService formFileValidationService,
                                IPersistenceService<Image, ImageEntity> persistenceService,
-                               MediaDbContext mediaDbContext)
+                               MediaDbContext mediaDbContext,
+                               ILogger logger)
         {
             _formFileValidationService = formFileValidationService;
             _persistenceService = persistenceService;
             _mediaDbContext = mediaDbContext;
+            _logger = logger;
         }
 
         [HttpGet("{pageId}/{imageType}/{imageSize}")]
@@ -65,12 +69,16 @@ namespace Bai.Media.Web.Controllers
                     return NoContent();
                 }
 
-                var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
+                _logger.Information("GetProcessedImageFromFileSystem Active:" + DomainUrls.Client);
+                _logger.Information("GetProcessedImageFromFileSystem QA:" + DomainUrls.ClientQA);
+                var imageUrl = $"{DomainUrls.ClientQA}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
                 var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
                 return File(processedImageBytes, "image/jpeg");
             }
             catch (WebException e)
             {
+                _logger.Error("GetProcessedImageFromFileSystem " + e.Message);
+
                 return NotFound();
             }
         }

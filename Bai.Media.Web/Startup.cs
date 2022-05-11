@@ -124,6 +124,8 @@ namespace Bai.Media.Web
             });
 
             // context.Database.Migrate();
+
+            logger.Information("Good world!");
         }
     }
 }
