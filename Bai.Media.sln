@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.Media.Connector", "Bai.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.General.Logs.Std", "..\Bai.General\Standard\Bai.General.Logs.Std\Bai.General.Logs.Std.csproj", "{B916EABD-3166-44D9-803D-D476EE99F2CA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bai.General.Environments", "..\Bai.General\Bai.General.Environments\Bai.General.Environments.csproj", "{A5BC387F-E409-4BFB-A330-99C9736A43DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,6 +120,12 @@ Global
 		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Release_Angular|Any CPU.Build.0 = Release|Any CPU
 		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B916EABD-3166-44D9-803D-D476EE99F2CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5BC387F-E409-4BFB-A330-99C9736A43DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5BC387F-E409-4BFB-A330-99C9736A43DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5BC387F-E409-4BFB-A330-99C9736A43DB}.Release_Angular|Any CPU.ActiveCfg = Release_Angular|Any CPU
+		{A5BC387F-E409-4BFB-A330-99C9736A43DB}.Release_Angular|Any CPU.Build.0 = Release_Angular|Any CPU
+		{A5BC387F-E409-4BFB-A330-99C9736A43DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5BC387F-E409-4BFB-A330-99C9736A43DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +140,7 @@ Global
 		{A90BE472-2112-4CC2-B648-A1F2313C7D16} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
 		{8C88C333-754F-4958-9955-2BDC75A1CB86} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
 		{B916EABD-3166-44D9-803D-D476EE99F2CA} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
+		{A5BC387F-E409-4BFB-A330-99C9736A43DB} = {3C30064D-5726-4EA0-8CB7-4A1DB4875CFC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AE36A636-7DC5-49B4-83F7-B7FF09069E11}

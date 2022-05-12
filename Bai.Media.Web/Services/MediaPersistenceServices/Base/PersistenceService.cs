@@ -43,7 +43,7 @@ namespace Bai.Media.Web.Services.MediaPersistenceServices.Base
             var modelKeyString = GetModelKeyAsString(model);
             var databaseUrl = MediaUrlService.GetDatabaseUrl(modelKeyId, EntityName);
 
-            var imageSize = (ImageSizeEnum?)(imageSizes == null ? null : ImageSizeEnum.Medium);
+            var imageSize = (ImageSizeEnum?)(imageSizes == null ? (ImageSizeEnum?)null : ImageSizeEnum.Medium);
             var defaultFileName = MediaUrlService.GetFileName(modelKeyString, newMedia.FileExtension, imageSize);
             var defaultFileSystemUrl = MediaUrlService.GetFileSystemUrl(EntityName, defaultFileName);
 

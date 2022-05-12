@@ -29,7 +29,11 @@ namespace Bai.Media.Web.Services
             return Image.FromStream(memoryStream);
         }
 
-        public static byte[] ImageToByteArray(Image imageIn) =>
-            (byte[])new ImageConverter().ConvertTo(imageIn, typeof(byte[]));
+        public static byte[] ImageToByteArray(Image imageIn)
+        {
+            // If on .NET Core 3.1, ImageConverter requires the System.Windows.Extensions package:
+            // In.NET 5 it is included in System.Drawing.Common:
+            return (byte[])new ImageConverter().ConvertTo(imageIn, typeof(byte[]));
+        }
     }
 }
