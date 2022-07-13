@@ -45,7 +45,7 @@ namespace Bai.Media.Web
         {
             try
             {
-                services.AddDomain(Environment?.EnvironmentName);
+                services.AddDomain("Local");// Environment?.EnvironmentName)) ;
             }
             catch (Exception e)
             {

@@ -71,9 +71,19 @@ namespace Bai.Media.Web.Controllers
 
                 _logger.Information("GetProcessedImageFromFileSystem Active:" + DomainUrls.Client);
                 _logger.Information("GetProcessedImageFromFileSystem QA:" + DomainUrls.ClientQA);
-                var imageUrl = $"{DomainUrls.ClientQA}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
-                var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
-                return File(processedImageBytes, "image/jpeg");
+
+                try
+                {
+                    var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.jpg";
+                    var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
+                    return File(processedImageBytes, "image/jpeg");
+                }
+                catch (WebException e)
+                {
+                    var imageUrl = $"{DomainUrls.Client}/bai.media.staticfiles/image/{pageId}_{imageType}_{ImageSizeTypes.GetImageSizePrefix(imageSize)}.png";
+                    var processedImageBytes = MediaService.DownloadImageFromUrlAsByteArray(imageUrl);
+                    return File(processedImageBytes, "image/png");
+                }
             }
             catch (WebException e)
             {
